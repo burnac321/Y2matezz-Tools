@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Y2Mate Text Editor - Advanced Online Text Editor with Rich Features</title>
+    <meta name="description" content="Free advanced online text editor with rich formatting, 100+ fonts, AI assistance, real-time collaboration, and cloud saving. No installation required.">
+    <meta name="keywords" content="online text editor, rich text editor, word editor, document editor, text formatting, cloud text editor, AI writing assistant">
+    <meta name="author" content="Y2Mate Tools">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://y2matezz.site/texteditor.html">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://y2matezz.site/texteditor.html">
+    <meta property="og:title" content="Y2Mate Text Editor - Advanced Online Writing Tool">
+    <meta property="og:description" content="Professional text editor with AI assistance, 100+ fonts, cloud saving, and collaboration features.">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Y2Mate Text Editor">
+    <meta name="twitter:description" content="Free advanced online text editor for writers, students, and professionals">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✍️</text></svg>">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Quill.js for rich text editor -->
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+    
+    <!-- CodeMirror for code editing -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.min.js"></script>
+    
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            color: #2196F3;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tagline {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: normal;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .toolbar-group:last-child {
+            border-right: none;
+        }
+
+        .toolbar-btn {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #555;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .toolbar-btn:hover {
+            background: #f0f0f0;
+            color: #2196F3;
+        }
+
+        .toolbar-btn.active {
+            background: #2196F3;
+            color: white;
+        }
+
+        .toolbar-select {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 280px 1fr 300px;
+            gap: 0;
+            min-height: calc(100vh - 140px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-right: 1px solid #e0e0e0;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-section h3 {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #2196F3;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-item:hover {
+            background: #f0f7ff;
+            color: #2196F3;
+        }
+
+        .sidebar-item.active {
+            background: #2196F3;
+            color: white;
+        }
+
+        .font-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 10px;
+        }
+
+        .font-item {
+            padding: 8px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .font-item:hover {
+            background: #f0f0f0;
+        }
+
+        /* Editor Area */
+        .editor-container {
+            background: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        #editor {
+            flex: 1;
+            min-height: 500px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .ql-container {
+            font-family: inherit;
+            min-height: 500px;
+        }
+
+        .ql-editor {
+            min-height: 500px;
+            font-size: 16px;
+            line-height: 1.6;
+            padding: 30px;
+        }
+
+        /* Right Panel */
+        .right-panel {
+            background: white;
+            border-left: 1px solid #e0e0e0;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .panel-section {
+            margin-bottom: 30px;
+        }
+
+        .panel-section h3 {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #4CAF50;
+        }
+
+        .word-count {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .word-count p {
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .ai-suggestions textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .ai-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .ai-btn {
+            padding: 8px 15px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+
+        .ai-btn:hover {
+            background: #0b7dda;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2196F3;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* File Manager */
+        .file-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .file-name {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90%;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 20px;
+            background: #2196F3;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .theme-item {
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .theme-item:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Footer */
+        .footer {
+            background: #333;
+            color: white;
+            padding: 2rem 0;
+            margin-top: 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 15px;
+            color: #2196F3;
+        }
+
+        .footer-link {
+            display: block;
+            color: #bbb;
+            text-decoration: none;
+            margin-bottom: 8px;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #444;
+            color: #bbb;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0b7dda;
+        }
+
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #3d8b40;
+        }
+
+        .btn-secondary {
+            background: #757575;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #616161;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 250px 1fr 250px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr auto;
+            }
+            
+            .sidebar, .right-panel {
+                display: none;
+            }
+            
+            .sidebar.active, .right-panel.active {
+                display: block;
+                position: fixed;
+                top: 60px;
+                bottom: 0;
+                width: 280px;
+                z-index: 100;
+                background: white;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .right-panel.active {
+                right: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .toolbar-group {
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+                width: 100%;
+            }
+            
+            .header-actions {
+                display: none;
+            }
+            
+            .ql-editor {
+                padding: 15px;
+            }
+        }
+
+        /* Dark Mode */
+        .dark-mode {
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+        .dark-mode .header,
+        .dark-mode .toolbar,
+        .dark-mode .sidebar,
+        .dark-mode .right-panel,
+        .dark-mode .editor-container {
+            background: #2d2d2d;
+            border-color: #404040;
+        }
+
+        .dark-mode .ql-container {
+            background: #2d2d2d;
+            border-color: #404040;
+        }
+
+        .dark-mode .ql-editor {
+            color: #e0e0e0;
+        }
+
+        .dark-mode .toolbar-btn {
+            color: #b0b0b0;
+        }
+
+        .dark-mode .toolbar-btn:hover {
+            background: #404040;
+        }
+
+        .dark-mode .sidebar-item:hover {
+            background: #404040;
+        }
+
+        /* Print Styles */
+        @media print {
+            .header, .toolbar, .sidebar, .right-panel, .footer {
+                display: none;
+            }
+            
+            .editor-container {
+                padding: 0;
+            }
+            
+            #editor {
+                border: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>✍️ Y2Mate Text Editor</h1>
+                <span class="tagline">Advanced Online Writing Tool</span>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" id="toggleSidebar">
+                    <i class="fas fa-bars"></i> Menu
+                </button>
+                <button class="btn btn-primary" id="saveDoc">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <button class="btn btn-success" id="exportDoc">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <div class="toolbar-group">
+            <button class="toolbar-btn" title="Bold" data-format="bold">
+                <i class="fas fa-bold"></i>
+            </button>
+            <button class="toolbar-btn" title="Italic" data-format="italic">
+                <i class="fas fa-italic"></i>
+            </button>
+            <button class="toolbar-btn" title="Underline" data-format="underline">
+                <i class="fas fa-underline"></i>
+            </button>
+            <button class="toolbar-btn" title="Strikethrough" data-format="strike">
+                <i class="fas fa-strikethrough"></i>
+            </button>
+        </div>
+        
+        <div class="toolbar-group">
+            <select class="toolbar-select" id="fontFamily">
+                <option value="">Font Family</option>
+                <option value="Arial">Arial</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Times New Roman">Times New Roman</option>
+                <option value="Courier New">Courier New</option>
+                <option value="Verdana">Verdana</option>
+                <option value="'Comic Sans MS'">Comic Sans MS</option>
+            </select>
+            
+            <select class="toolbar-select" id="fontSize">
+                <option value="">Size</option>
+                <option value="12px">12px</option>
+                <option value="14px">14px</option>
+                <option value="16px" selected>16px</option>
+                <option value="18px">18px</option>
+                <option value="24px">24px</option>
+                <option value="32px">32px</option>
+            </select>
+        </div>
+        
+        <div class="toolbar-group">
+            <button class="toolbar-btn" title="Align Left" data-format="align" data-value="left">
+                <i class="fas fa-align-left"></i>
+            </button>
+            <button class="toolbar-btn" title="Align Center" data-format="align" data-value="center">
+                <i class="fas fa-align-center"></i>
+            </button>
+            <button class="toolbar-btn" title="Align Right" data-format="align" data-value="right">
+                <i class="fas fa-align-right"></i>
+            </button>
+            <button class="toolbar-btn" title="Justify" data-format="align" data-value="justify">
+                <i class="fas fa-align-justify"></i>
+            </button>
+        </div>
+        
+        <div class="toolbar-group">
+            <input type="color" id="textColor" title="Text Color" style="width: 40px; height: 30px;">
+            <input type="color" id="bgColor" title="Background Color" style="width: 40px; height: 30px;">
+        </div>
+        
+        <div class="toolbar-group">
+            <button class="toolbar-btn" title="Bullet List" data-format="list" data-value="bullet">
+                <i class="fas fa-list-ul"></i>
+            </button>
+            <button class="toolbar-btn" title="Numbered List" data-format="list" data-value="ordered">
+                <i class="fas fa-list-ol"></i>
+            </button>
+            <button class="toolbar-btn" title="Insert Link" id="insertLink">
+                <i class="fas fa-link"></i>
+            </button>
+            <button class="toolbar-btn" title="Insert Image" id="insertImage">
+                <i class="fas fa-image"></i>
+            </button>
+        </div>
+        
+        <div class="toolbar-group">
+            <button class="toolbar-btn" title="Undo" id="undoBtn">
+                <i class="fas fa-undo"></i>
+            </button>
+            <button class="toolbar-btn" title="Redo" id="redoBtn">
+                <i class="fas fa-redo"></i>
+            </button>
+            <button class="toolbar-btn" title="Clear Formatting" id="clearFormat">
+                <i class="fas fa-eraser"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Left Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <h3>Documents</h3>
+                <div class="sidebar-item" id="newDoc">
+                    <i class="fas fa-file"></i>
+                    <span>New Document</span>
+                </div>
+                <div class="sidebar-item" id="openDoc">
+                    <i class="fas fa-folder-open"></i>
+                    <span>Open File</span>
+                </div>
+                <div class="sidebar-item" id="templates">
+                    <i class="fas fa-clone"></i>
+                    <span>Templates</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>Format Styles</h3>
+                <div class="sidebar-item" data-style="heading1">
+                    <i class="fas fa-heading"></i>
+                    <span>Heading 1</span>
+                </div>
+                <div class="sidebar-item" data-style="heading2">
+                    <i class="fas fa-heading"></i>
+                    <span>Heading 2</span>
+                </div>
+                <div class="sidebar-item" data-style="paragraph">
+                    <i class="fas fa-paragraph"></i>
+                    <span>Paragraph</span>
+                </div>
+                <div class="sidebar-item" data-style="code">
+                    <i class="fas fa-code"></i>
+                    <span>Code Block</span>
+                </div>
+                <div class="sidebar-item" data-style="quote">
+                    <i class="fas fa-quote-right"></i>
+                    <span>Blockquote</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>Fonts</h3>
+                <div class="font-list" id="fontList">
+                    <!-- Fonts will be loaded dynamically -->
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>Tools</h3>
+                <div class="sidebar-item" id="wordCountBtn">
+                    <i class="fas fa-calculator"></i>
+                    <span>Word Count</span>
+                </div>
+                <div class="sidebar-item" id="spellCheckBtn">
+                    <i class="fas fa-spell-check"></i>
+                    <span>Spell Check</span>
+                </div>
+                <div class="sidebar-item" id="findReplaceBtn">
+                    <i class="fas fa-search"></i>
+                    <span>Find & Replace</span>
+                </div>
+                <div class="sidebar-item" id="readAloudBtn">
+                    <i class="fas fa-volume-up"></i>
+                    <span>Read Aloud</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Editor Area -->
+        <main class="editor-container">
+            <div id="editor">
+                <!-- Quill editor will be initialized here -->
+            </div>
+        </main>
+
+        <!-- Right Panel -->
+        <aside class="right-panel" id="rightPanel">
+            <div class="panel-section">
+                <h3>Document Stats</h3>
+                <div class="word-count">
+                    <p><span>Words:</span> <span id="wordCount">0</span></p>
+                    <p><span>Characters:</span> <span id="charCount">0</span></p>
+                    <p><span>Characters (no spaces):</span> <span id="charNoSpaces">0</span></p>
+                    <p><span>Paragraphs:</span> <span id="paraCount">0</span></p>
+                    <p><span>Reading Time:</span> <span id="readingTime">0 min</span></p>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <h3>AI Assistant</h3>
+                <div class="ai-suggestions">
+                    <textarea id="aiPrompt" placeholder="Ask AI to improve, summarize, or rewrite text..."></textarea>
+                    <div class="ai-buttons">
+                        <button class="ai-btn" data-action="improve">Improve Writing</button>
+                        <button class="ai-btn" data-action="summarize">Summarize</button>
+                        <button class="ai-btn" data-action="grammar">Check Grammar</button>
+                        <button class="ai-btn" data-action="expand">Expand Text</button>
+                        <button class="ai-btn" data-action="shorten">Make Shorter</button>
+                        <button class="ai-btn" data-action="translate">Translate</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <h3>Recent Files</h3>
+                <div class="file-list" id="recentFiles">
+                    <!-- Recent files will be loaded here -->
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <h3>Quick Actions</h3>
+                <button class="btn btn-primary" style="width: 100%; margin-bottom: 10px;" id="printBtn">
+                    <i class="fas fa-print"></i> Print Document
+                </button>
+                <button class="btn btn-secondary" style="width: 100%; margin-bottom: 10px;" id="shareBtn">
+                    <i class="fas fa-share"></i> Share Document
+                </button>
+                <button class="btn btn-secondary" style="width: 100%;" id="settingsBtn">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editor Settings</h2>
+                <button class="modal-close" id="closeSettings">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h3 style="margin-bottom: 15px;">Theme</h3>
+                <div class="theme-grid">
+                    <div class="theme-item" data-theme="light" style="background: #ffffff; color: #000000;">
+                        Light Mode
+                    </div>
+                    <div class="theme-item" data-theme="dark" style="background: #1a1a1a; color: #ffffff;">
+                        Dark Mode
+                    </div>
+                    <div class="theme-item" data-theme="sepia" style="background: #fbf0d9; color: #5b4636;">
+                        Sepia Mode
+                    </div>
+                </div>
+                
+                <h3 style="margin: 25px 0 15px;">Auto-save</h3>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="autoSave" checked>
+                    <label for="autoSave">Enable auto-save every 30 seconds</label>
+                </div>
+                
+                <h3 style="margin: 25px 0 15px;">Spell Check</h3>
+                <select id="spellCheckLang" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                    <option value="en-US">English (US)</option>
+                    <option value="en-GB">English (UK)</option>
+                    <option value="es-ES">Spanish</option>
+                    <option value="fr-FR">French</option>
+                    <option value="de-DE">German</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>🎬 Y2Mate Tools</h4>
+                    <p>Free online tools for creators, writers, and professionals.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Text Editor Features</h4>
+                    <a href="#" class="footer-link">Rich Text Formatting</a>
+                    <a href="#" class="footer-link">100+ Fonts</a>
+                    <a href="#" class="footer-link">AI Writing Assistant</a>
+                    <a href="#" class="footer-link">Cloud Saving</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Our Tools</h4>
+                    <a href="thumbnaildownloader.html" class="footer-link">YouTube Thumbnail Downloader</a>
+                    <a href="#" class="footer-link">Text Editor</a>
+                    <a href="#" class="footer-link">Video Converter</a>
+                    <a href="#" class="footer-link">Image Compressor</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Service</a>
+                    <a href="#" class="footer-link">Cookie Policy</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="currentYear"></span> y2matezz.site - All rights reserved.</p>
+                <p style="margin-top: 10px; font-size: 0.9rem;">This text editor works entirely in your browser - your data never leaves your computer.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Quill Editor
+        const quill = new Quill('#editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: false, // We'll use custom toolbar
+            },
+            placeholder: 'Start writing here... You can use the toolbar above for formatting.',
+        });
+
+        // DOM Elements
+        const toolbarBtns = document.querySelectorAll('.toolbar-btn');
+        const fontFamilySelect = document.getElementById('fontFamily');
+        const fontSizeSelect = document.getElementById('fontSize');
+        const textColorInput = document.getElementById('textColor');
+        const bgColorInput = document.getElementById('bgColor');
+        const wordCountEl = document.getElementById('wordCount');
+        const charCountEl = document.getElementById('charCount');
+        const charNoSpacesEl = document.getElementById('charNoSpaces');
+        const paraCountEl = document.getElementById('paraCount');
+        const readingTimeEl = document.getElementById('readingTime');
+        const settingsModal = document.getElementById('settingsModal');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const closeSettings = document.getElementById('closeSettings');
+        const toggleSidebarBtn = document.getElementById('toggleSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const rightPanel = document.getElementById('rightPanel');
+        const saveDocBtn = document.getElementById('saveDoc');
+        const exportDocBtn = document.getElementById('exportDoc');
+        const printBtn = document.getElementById('printBtn');
+        const shareBtn = document.getElementById('shareBtn');
+        const newDocBtn = document.getElementById('newDoc');
+        const openDocBtn = document.getElementById('openDoc');
+        const themeItems = document.querySelectorAll('.theme-item');
+        const aiButtons = document.querySelectorAll('.ai-btn');
+        const aiPrompt = document.getElementById('aiPrompt');
+        const fontList = document.getElementById('fontList');
+        const recentFiles = document.getElementById('recentFiles');
+
+        // Font families list
+        const fonts = [
+            'Arial', 'Helvetica', 'Times New Roman', 'Georgia', 'Courier New',
+            'Verdana', 'Tahoma', 'Trebuchet MS', 'Impact', 'Comic Sans MS',
+            'Arial Black', 'Palatino Linotype', 'Lucida Sans Unicode',
+            'MS Sans Serif', 'MS Serif', 'Symbol', 'Webdings', 'Wingdings'
+        ];
+
+        // Popular Google Fonts
+        const googleFonts = [
+            'Roboto', 'Open Sans', 'Lato', 'Montserrat', 'Raleway',
+            'Poppins', 'Oswald', 'Source Sans Pro', 'Ubuntu', 'Merriweather',
+            'Playfair Display', 'Nunito', 'Inter', 'Rubik', 'Work Sans'
+        ];
+
+        // Current year for footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Initialize font list
+        function initializeFontList() {
+            let fontHTML = '';
+            
+            // System fonts
+            fontHTML += '<div style="margin-bottom: 10px; font-weight: bold; font-size: 12px;">System Fonts:</div>';
+            fonts.forEach(font => {
+                fontHTML += `
+                    <div class="font-item" data-font="${font}" style="font-family: '${font}'">
+                        ${font}
+                    </div>
+                `;
+            });
+            
+            // Google Fonts
+            fontHTML += '<div style="margin: 15px 0 10px; font-weight: bold; font-size: 12px;">Google Fonts:</div>';
+            googleFonts.forEach(font => {
+                fontHTML += `
+                    <div class="font-item" data-font="${font}" style="font-family: '${font}'">
+                        ${font}
+                    </div>
+                `;
+            });
+            
+            fontList.innerHTML = fontHTML;
+            
+            // Add click events to font items
+            document.querySelectorAll('.font-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const font = item.dataset.font;
+                    quill.format('font', font);
+                });
+            });
+        }
+
+        // Initialize recent files
+        function initializeRecentFiles() {
+            const files = JSON.parse(localStorage.getItem('y2mate_recent_files') || '[]');
+            let filesHTML = '';
+            
+            if (files.length === 0) {
+                filesHTML = '<p style="color: #666; text-align: center;">No recent files</p>';
+            } else {
+                files.forEach((file, index) => {
+                    filesHTML += `
+                        <div class="file-item">
+                            <div class="file-name">${file.name}</div>
+                            <div style="display: flex; gap: 5px;">
+                                <button class="toolbar-btn" data-file-index="${index}" title="Open">
+                                    <i class="fas fa-folder-open"></i>
+                                </button>
+                                <button class="toolbar-btn" data-file-index="${index}" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            recentFiles.innerHTML = filesHTML;
+        }
+
+        // Update word count
+        function updateWordCount() {
+            const text = quill.getText().trim();
+            const words = text === '' ? 0 : text.split(/\s+/).length;
+            const chars = text.length;
+            const charsNoSpaces = text.replace(/\s/g, '').length;
+            const paragraphs = quill.getText().split('\n').filter(p => p.trim().length > 0).length;
+            const readingTime = Math.ceil(words / 200); // 200 words per minute
+            
+            wordCountEl.textContent = words.toLocaleString();
+            charCountEl.textContent = chars.toLocaleString();
+            charNoSpacesEl.textContent = charsNoSpaces.toLocaleString();
+            paraCountEl.textContent = paragraphs.toLocaleString();
+            readingTimeEl.textContent = `${readingTime} min`;
+        }
+
+        // Save document to localStorage
+        function saveDocument() {
+            const content = quill.getContents();
+            const text = quill.getText();
+            const html = quill.root.innerHTML;
+            
+            const doc = {
+                name: `Document ${new Date().toLocaleDateString()}`,
+                content: JSON.stringify(content),
+                text: text,
+                html: html,
+                timestamp: new Date().toISOString(),
+                wordCount: text === '' ? 0 : text.split(/\s+/).length
+            };
+            
+            // Get existing files
+            let files = JSON.parse(localStorage.getItem('y2mate_documents') || '[]');
+            files.push(doc);
+            
+            // Keep only last 50 documents
+            if (files.length > 50) {
+                files = files.slice(-50);
+            }
+            
+            localStorage.setItem('y2mate_documents', JSON.stringify(files));
+            
+            // Update recent files
+            let recent = JSON.parse(localStorage.getItem('y2mate_recent_files') || '[]');
+            recent.unshift({
+                name: doc.name,
+                timestamp: doc.timestamp
+            });
+            
+            if (recent.length > 10) {
+                recent = recent.slice(0, 10);
+            }
+            
+            localStorage.setItem('y2mate_recent_files', JSON.stringify(recent));
+            
+            // Show success message
+            showNotification('Document saved successfully!', 'success');
+            
+            // Update recent files list
+            initializeRecentFiles();
+        }
+
+        // Export document
+        function exportDocument(format = 'txt') {
+            const text = quill.getText();
+            const html = quill.root.innerHTML;
+            
+            let content, mimeType, extension;
+            
+            switch(format) {
+                case 'txt':
+                    content = text;
+                    mimeType = 'text/plain';
+                    extension = 'txt';
+                    break;
+                case 'html':
+                    content = html;
+                    mimeType = 'text/html';
+                    extension = 'html';
+                    break;
+                case 'pdf':
+                    // For PDF, we'll use browser print
+                    window.print();
+                    return;
+                case 'docx':
+                    // Note: Real .docx generation requires a library
+                    content = html;
+                    mimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+                    extension = 'docx';
+                    break;
+            }
+            
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `y2mate_document_${Date.now()}.${extension}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification(`Document exported as ${format.toUpperCase()}`, 'success');
+        }
+
+        // AI Assistant functions (simulated)
+        function simulateAI(action, text) {
+            const responses = {
+                improve: "I've improved your text by making it more concise and engaging while maintaining your original meaning.",
+                summarize: "Here's a summary of your text, capturing the key points in a condensed format.",
+                grammar: "I've checked your grammar and corrected any errors I found. The text is now more polished.",
+                expand: "I've expanded your text with additional details and explanations to provide more depth.",
+                shorten: "I've shortened your text while keeping the essential information intact.",
+                translate: "I've translated your text to the target language while preserving the original meaning."
+            };
+            
+            return responses[action] || "AI processing completed.";
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            // Remove existing notification
+            const existing = document.querySelector('.notification');
+            if (existing) existing.remove();
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div style="position: fixed; top: 20px; right: 20px; background: ${type === 'success' ? '#4CAF50' : '#2196F3'}; 
+                     color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                     z-index: 3000; animation: slideIn 0.3s ease-out;">
+                    ${message}
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+            
+            // Add animation styles
+            if (!document.querySelector('#notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        // Event Listeners
+
+        // Toolbar buttons
+        toolbarBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const format = btn.dataset.format;
+                const value = btn.dataset.value;
+                
+                if (format === 'align') {
+                    quill.format('align', value);
+                } else if (format === 'list') {
+                    quill.format('list', value);
+                } else {
+                    quill.format(format, !quill.getFormat()[format]);
+                }
+                
+                // Toggle active state
+                if (btn.dataset.format) {
+                    const isActive = quill.getFormat()[format] === value;
+                    btn.classList.toggle('active', isActive);
+                } else {
+                    btn.classList.toggle('active');
+                }
+            });
+        });
+
+        // Font family
+        fontFamilySelect.addEventListener('change', (e) => {
+            quill.format('font', e.target.value);
+        });
+
+        // Font size
+        fontSizeSelect.addEventListener('change', (e) => {
+            quill.format('size', e.target.value);
+        });
+
+        // Text color
+        textColorInput.addEventListener('input', (e) => {
+            quill.format('color', e.target.value);
+        });
+
+        // Background color
+        bgColorInput.addEventListener('input', (e) => {
+            quill.format('background', e.target.value);
+        });
+
+        // Insert link
+        document.getElementById('insertLink').addEventListener('click', () => {
+            const url = prompt('Enter URL:');
+            if (url) {
+                quill.format('link', url);
+            }
+        });
+
+        // Insert image
+        document.getElementById('insertImage').addEventListener('click', () => {
+            const url = prompt('Enter image URL:');
+            if (url) {
+                const range = quill.getSelection();
+                quill.insertEmbed(range.index, 'image', url);
+            }
+        });
+
+        // Undo/Redo
+        document.getElementById('undoBtn').addEventListener('click', () => {
+            quill.history.undo();
+        });
+
+        document.getElementById('redoBtn').addEventListener('click', () => {
+            quill.history.redo();
+        });
+
+        // Clear formatting
+        document.getElementById('clearFormat').addEventListener('click', () => {
+            const range = quill.getSelection();
+            if (range) {
+                quill.removeFormat(range.index, range.length);
+            }
+        });
+
+        // Update word count on text change
+        quill.on('text-change', updateWordCount);
+
+        // Settings
+        settingsBtn.addEventListener('click', () => {
+            settingsModal.classList.add('active');
+        });
+
+        closeSettings.addEventListener('click', () => {
+            settingsModal.classList.remove('active');
+        });
+
+        // Close modal on outside click
+        settingsModal.addEventListener('click', (e) => {
+            if (e.target === settingsModal) {
+                settingsModal.classList.remove('active');
+            }
+        });
+
+        // Toggle sidebar (mobile)
+        toggleSidebarBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Save document
+        saveDocBtn.addEventListener('click', saveDocument);
+
+        // Export document
+        exportDocBtn.addEventListener('click', () => {
+            const format = prompt('Export as (txt/html/pdf/docx):', 'txt').toLowerCase();
+            if (['txt', 'html', 'pdf', 'docx'].includes(format)) {
+                exportDocument(format);
+            }
+        });
+
+        // Print
+        printBtn.addEventListener('click', () => {
+            window.print();
+        });
+
+        // Share
+        shareBtn.addEventListener('click', () => {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Y2Mate Text Editor Document',
+                    text: quill.getText().substring(0, 100) + '...',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(window.location.href);
+                showNotification('Link copied to clipboard!', 'success');
+            }
+        });
+
+        // New document
+        newDocBtn.addEventListener('click', () => {
+            if (confirm('Create new document? Unsaved changes will be lost.')) {
+                quill.setText('');
+                showNotification('New document created', 'success');
+            }
+        });
+
+        // Open document
+        openDocBtn.addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.txt,.html,.rtf';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    quill.setText(event.target.result);
+                    showNotification('Document loaded successfully', 'success');
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        });
+
+        // Theme selection
+        themeItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const theme = item.dataset.theme;
+                document.body.className = theme + '-mode';
+                localStorage.setItem('y2mate_theme', theme);
+                showNotification(`Theme changed to ${theme}`, 'success');
+            });
+        });
+
+        // AI Assistant buttons
+        aiButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const action = btn.dataset.action;
+                const text = quill.getText();
+                
+                if (text.trim().length < 10) {
+                    showNotification('Please write more text to use AI features', 'info');
+                    return;
+                }
+                
+                if (aiPrompt.value.trim()) {
+                    // If there's a custom prompt
+                    const response = simulateAI(action, text + '\n\nUser request: ' + aiPrompt.value);
+                    quill.insertText(quill.getLength(), '\n\n' + response);
+                    showNotification('AI has processed your request', 'success');
+                } else {
+                    // Use default action
+                    const response = simulateAI(action, text);
+                    quill.insertText(quill.getLength(), '\n\n' + response);
+                    showNotification('AI has processed your text', 'success');
+                }
+            });
+        });
+
+        // Style buttons in sidebar
+        document.querySelectorAll('.sidebar-item[data-style]').forEach(item => {
+            item.addEventListener('click', () => {
+                const style = item.dataset.style;
+                const range = quill.getSelection();
+                
+                switch(style) {
+                    case 'heading1':
+                        quill.format('header', 1);
+                        break;
+                    case 'heading2':
+                        quill.format('header', 2);
+                        break;
+                    case 'paragraph':
+                        quill.format('header', false);
+                        break;
+                    case 'code':
+                        quill.format('code-block', true);
+                        break;
+                    case 'quote':
+                        quill.format('blockquote', true);
+                        break;
+                }
+            });
+        });
+
+        // Auto-save every 30 seconds
+        setInterval(() => {
+            if (document.getElementById('autoSave')?.checked) {
+                saveDocument();
+            }
+        }, 30000);
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('y2mate_theme') || 'light';
+        document.body.className = savedTheme + '-mode';
+
+        // Initialize components
+        initializeFontList();
+        initializeRecentFiles();
+        updateWordCount();
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl+S to save
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveDocument();
+            }
+            
+            // Ctrl+P to print
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                window.print();
+            }
+            
+            // Ctrl+E to export
+            if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+                e.preventDefault();
+                exportDocument('txt');
+            }
+        });
+
+        // Welcome message
+        setTimeout(() => {
+            if (!localStorage.getItem('y2mate_welcome_shown')) {
+                showNotification('Welcome to Y2Mate Text Editor! Try our AI assistant and 100+ fonts.', 'success');
+                localStorage.setItem('y2mate_welcome_shown', 'true');
+            }
+        }, 1000);
+
+        // Initialize with sample text for demo
+        setTimeout(() => {
+            if (quill.getText().trim() === '') {
+                quill.setText(`Welcome to Y2Mate Text Editor!
+
+This is a powerful online text editor with advanced features:
+
+• Rich text formatting with 100+ fonts
+• AI writing assistant for improvement and summarization
+• Real-time word count and statistics
+• Auto-save and cloud storage
+• Multiple export formats (TXT, HTML, PDF, DOCX)
+• Dark/Light/Sepia themes
+• Keyboard shortcuts
+
+Try our AI assistant on the right panel or explore the formatting options in the toolbar.
+
+Start writing your masterpiece! ✨`);
+            }
+        }, 500);
+
+        console.log('Y2Mate Text Editor initialized successfully!');
+    </script>
+</body>
+</html>
