@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Y2Mate - Free YouTube Thumbnail Downloader | HD Quality</title>
+    <meta name="description" content="Download YouTube thumbnails in HD, SD, HQ, Max resolution for free. Fast, easy, and no registration required. Extract thumbnails from any YouTube video.">
+    <meta name="keywords" content="YouTube thumbnail downloader, download YouTube thumbnails, YouTube thumbnail extractor, free thumbnail download, YouTube tools">
+    <meta name="author" content="Y2Mate Tools">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://y2matezz.site">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://y2matezz.site">
+    <meta property="og:title" content="Y2Mate - Free YouTube Thumbnail Downloader">
+    <meta property="og:description" content="Download HD YouTube thumbnails instantly. No software, no registration.">
+    <meta property="og:image" content="https://y2matezz.site/thumbnail-preview.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Y2Mate - YouTube Thumbnail Downloader">
+    <meta name="twitter:description" content="Free tool to download YouTube video thumbnails in all sizes">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>">
+    
+    <!-- Schema.org structured data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Y2Mate YouTube Thumbnail Downloader",
+        "description": "Free online tool to download YouTube video thumbnails",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "Y2Mate Tools"
+        }
+    }
+    </script>
+    
+    <style>
+       /* Reset & Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: #f8f9fa;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+.header {
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 20px;
+}
+
+.logo h1 {
+    font-size: 1.8rem;
+    color: #ff0000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tagline {
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: normal;
+}
+
+.nav {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: #ff0000;
+}
+
+/* Hero */
+.hero {
+    padding: 4rem 0;
+    text-align: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.hero-title {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.highlight {
+    color: #ffeb3b;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+}
+
+/* Input Section */
+.input-section {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+#videoUrl {
+    flex: 1;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+#videoUrl:focus {
+    outline: 3px solid #ffeb3b;
+}
+
+.btn-primary {
+    background: #ff0000;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-primary:hover {
+    background: #cc0000;
+}
+
+.input-hint {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    text-align: left;
+    margin-top: 5px;
+}
+
+/* Results */
+.results-section {
+    padding: 4rem 0;
+    background: white;
+}
+
+.video-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 3rem;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.video-thumb {
+    width: 120px;
+    height: 90px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.video-details h3 {
+    font-size: 1.3rem;
+    margin-bottom: 5px;
+}
+
+.thumbnails-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 2rem 0;
+}
+
+.thumbnail-item {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.thumbnail-item:hover {
+    transform: translateY(-5px);
+}
+
+.thumbnail-img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+}
+
+.thumbnail-info {
+    padding: 15px;
+}
+
+.thumbnail-info h4 {
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.thumbnail-info p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.btn-secondary {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.instructions {
+    margin-top: 2rem;
+    padding: 15px;
+    background: #e8f5e9;
+    border-radius: 8px;
+    border-left: 4px solid #4CAF50;
+}
+
+/* Steps & Features */
+.info-section {
+    padding: 4rem 0;
+}
+
+.alt-bg {
+    background: #f8f9fa;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.step {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    background: #667eea;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.feature {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+/* FAQ */
+.faq-list {
+    max-width: 800px;
+    margin: 3rem auto 0;
+}
+
+.faq-item {
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.faq-item summary {
+    padding: 1rem;
+    background: white;
+    cursor: pointer;
+    font-weight: 600;
+    list-style: none;
+    position: relative;
+}
+
+.faq-item summary::after {
+    content: '+';
+    position: absolute;
+    right: 1rem;
+    font-size: 1.5rem;
+    transition: transform 0.3s;
+}
+
+.faq-item[open] summary::after {
+    content: '−';
+}
+
+.faq-item p {
+    padding: 1rem;
+    background: #f8f9fa;
+    margin: 0;
+    border-top: 1px solid #eee;
+}
+
+/* Footer */
+.footer {
+    background: #333;
+    color: white;
+    padding: 4rem 0 2rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+.footer-link {
+    display: block;
+    color: #bbb;
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: color 0.3s;
+}
+
+.footer-link:hover {
+    color: white;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid #444;
+    color: #bbb;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 10px;
+    max-width: 90%;
+    max-height: 90%;
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff0000;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 10;
+}
+
+#modalImage {
+    max-width: 100%;
+    max-height: 70vh;
+    display: block;
+}
+
+.modal-info {
+    padding: 20px;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .input-group {
+        flex-direction: column;
+    }
+    
+    .video-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .nav {
+        display: none;
+    }
+    
+    .steps, .features-grid {
+        grid-template-columns: 1fr;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>🎬 Y2Mate</h1>
+                <span class="tagline">YouTube Thumbnail Downloader</span>
+            </div>
+            <nav class="nav">
+                <a href="#how-it-works" class="nav-link">How It Works</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#faq" class="nav-link">FAQ</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="main-content">
+        <section class="hero">
+            <div class="container">
+                <h1 class="hero-title">Download YouTube Thumbnails in <span class="highlight">HD Quality</span></h1>
+                <p class="hero-subtitle">Free, fast, and no registration required. Get thumbnails in all available resolutions.</p>
+                
+                <div class="input-section">
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="videoUrl" 
+                            placeholder="Paste YouTube video URL here..."
+                            autocomplete="off"
+                            aria-label="YouTube video URL"
+                        >
+                        <button id="extractBtn" class="btn-primary">
+                            <span class="btn-text">Extract Thumbnails</span>
+                            <span class="btn-loader" hidden>⏳</span>
+                        </button>
+                    </div>
+                    <p class="input-hint">Example: https://www.youtube.com/watch?v=dQw4w9WgXcQ</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section" id="results" hidden>
+            <div class="container">
+                <h2>Available Thumbnails</h2>
+                <div class="video-info">
+                    <img id="videoThumb" src="" alt="Video thumbnail" class="video-thumb">
+                    <div class="video-details">
+                        <h3 id="videoTitle">Video Title</h3>
+                        <p id="videoChannel">Channel Name</p>
+                    </div>
+                </div>
+                
+                <div class="thumbnails-grid" id="thumbnailsContainer">
+                    <!-- Thumbnails will be generated here -->
+                </div>
+                
+                <div class="instructions">
+                    <p><strong>How to download:</strong> Click any image to preview, then right-click → "Save image as"</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="info-section" id="how-it-works">
+            <div class="container">
+                <h2>How It Works</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Paste URL</h3>
+                        <p>Copy and paste any YouTube video URL into the input field above.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Extract Thumbnails</h3>
+                        <p>Click "Extract Thumbnails" to get all available thumbnail sizes.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Download</h3>
+                        <p>Click any thumbnail to preview, then right-click and save to your device.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="info-section alt-bg" id="features">
+            <div class="container">
+                <h2>Features</h2>
+                <div class="features-grid">
+                    <div class="feature">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Fast & Free</h3>
+                        <p>No registration, no downloads, completely free to use.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🖼️</div>
+                        <h3>All Sizes</h3>
+                        <p>Get thumbnails in all available resolutions from SD to Max quality.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">📱</div>
+                        <h3>Mobile Friendly</h3>
+                        <p>Works perfectly on all devices - desktop, tablet, and mobile.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🔒</div>
+                        <h3>Privacy Safe</h3>
+                        <p>No data storage. We don't save or share your video URLs.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="info-section" id="faq">
+            <div class="container">
+                <h2>Frequently Asked Questions</h2>
+                <div class="faq-list">
+                    <details class="faq-item">
+                        <summary>Is this tool free to use?</summary>
+                        <p>Yes, Y2Mate Thumbnail Downloader is completely free with no hidden charges or registration required.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Is downloading YouTube thumbnails legal?</summary>
+                        <p>Yes, YouTube thumbnails are publicly accessible. However, you should respect copyright and use them fairly under YouTube's terms.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>What thumbnail sizes are available?</summary>
+                        <p>We extract all available sizes: Default (120×90), Medium (320×180), High (480×360), SD (640×480), and Max Resolution (1280×720).</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Do you store my data?</summary>
+                        <p>No, we don't store or share any video URLs or personal information. Everything happens in your browser.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Does it work on mobile devices?</summary>
+                        <p>Yes, our tool is fully responsive and works on all modern smartphones, tablets, and desktop computers.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h3>🎬 Y2Mate</h3>
+                        <p>Free YouTube tools for creators and viewers.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Legal</h4>
+                        <a href="#terms" class="footer-link">Terms of Service</a>
+                        <a href="#privacy" class="footer-link">Privacy Policy</a>
+                        <a href="#dmca" class="footer-link">DMCA</a>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Tools</h4>
+                        <a href="#" class="footer-link">Thumbnail Downloader</a>
+                        <a href="#" class="footer-link">Video Converter</a>
+                        <a href="#" class="footer-link">MP3 Converter</a>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; <span id="currentYear"></span> y2matezz.site - All rights reserved. This tool is not affiliated with YouTube.</p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Modal for image preview -->
+    <div class="modal" id="imageModal" hidden>
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal">&times;</button>
+            <img id="modalImage" src="" alt="Preview">
+            <div class="modal-info">
+                <p id="modalSize"></p>
+                <a id="modalDownload" class="btn-secondary" download>Download Image</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+      // DOM Elements
+const videoUrlInput = document.getElementById('videoUrl');
+const extractBtn = document.getElementById('extractBtn');
+const resultsSection = document.getElementById('results');
+const thumbnailsContainer = document.getElementById('thumbnailsContainer');
+const videoThumb = document.getElementById('videoThumb');
+const videoTitle = document.getElementById('videoTitle');
+const videoChannel = document.getElementById('videoChannel');
+const imageModal = document.getElementById('imageModal');
+const modalImage = document.getElementById('modalImage');
+const modalSize = document.getElementById('modalSize');
+const modalDownload = document.getElementById('modalDownload');
+const closeModal = document.getElementById('closeModal');
+
+// Current year for footer
+document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+// Thumbnail types with descriptions
+const thumbnailTypes = [
+    { code: 'default', size: '120×90', label: 'Default Quality', desc: 'Small thumbnail' },
+    { code: 'mqdefault', size: '320×180', label: 'Medium Quality', desc: 'Standard quality' },
+    { code: 'hqdefault', size: '480×360', label: 'High Quality', desc: 'Good for most uses' },
+    { code: 'sddefault', size: '640×480', label: 'Standard Definition', desc: 'SD quality' },
+    { code: 'maxresdefault', size: '1280×720', label: 'Maximum Resolution', desc: 'Best quality available' }
+];
+
+// Extract video ID from URL
+function extractVideoId(url) {
+    const patterns = [
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/,
+        /^([a-zA-Z0-9_-]{11})$/
+    ];
+    
+    for (const pattern of patterns) {
+        const match = url.match(pattern);
+        if (match && match[1]) {
+            return match[1];
+        }
+    }
+    return null;
+}
+
+// Get video info (title and channel) - This is a client-side approximation
+async function getVideoInfo(videoId) {
+    try {
+        // Note: This is a workaround since YouTube API requires key
+        // In production, you'd need a backend with YouTube API key
+        const response = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`);
+        const data = await response.json();
+        
+        return {
+            title: data.title || 'YouTube Video',
+            author: data.author_name || 'Unknown Channel'
+        };
+    } catch (error) {
+        console.error('Error fetching video info:', error);
+        return {
+            title: 'YouTube Video',
+            author: 'Unknown Channel'
+        };
+    }
+}
+
+// Generate thumbnail URLs
+function generateThumbnailUrls(videoId) {
+    return thumbnailTypes.map(type => ({
+        ...type,
+        url: `https://img.youtube.com/vi/${videoId}/${type.code}.jpg`
+    }));
+}
+
+// Validate YouTube URL
+function isValidYouTubeUrl(url) {
+    return extractVideoId(url) !== null;
+}
+
+// Show loading state
+function setLoading(isLoading) {
+    const btnText = extractBtn.querySelector('.btn-text');
+    const btnLoader = extractBtn.querySelector('.btn-loader');
+    
+    if (isLoading) {
+        btnText.hidden = true;
+        btnLoader.hidden = false;
+        extractBtn.disabled = true;
+    } else {
+        btnText.hidden = false;
+        btnLoader.hidden = true;
+        extractBtn.disabled = false;
+    }
+}
+
+// Display thumbnails
+function displayThumbnails(thumbnails, videoInfo) {
+    // Update video info
+    videoTitle.textContent = videoInfo.title;
+    videoChannel.textContent = `Channel: ${videoInfo.author}`;
+    videoThumb.src = thumbnails[0].url;
+    
+    // Clear previous thumbnails
+    thumbnailsContainer.innerHTML = '';
+    
+    // Create thumbnail cards
+    thumbnails.forEach(thumb => {
+        const thumbnailItem = document.createElement('div');
+        thumbnailItem.className = 'thumbnail-item';
+        
+        thumbnailItem.innerHTML = `
+            <img src="${thumb.url}" alt="${thumb.label}" class="thumbnail-img" loading="lazy">
+            <div class="thumbnail-info">
+                <h4>${thumb.label}</h4>
+                <p>${thumb.size} - ${thumb.desc}</p>
+                <button class="btn-secondary preview-btn" data-url="${thumb.url}" data-size="${thumb.size}">
+                    Preview & Download
+                </button>
+            </div>
+        `;
+        
+        thumbnailsContainer.appendChild(thumbnailItem);
+    });
+    
+    // Add click events to preview buttons
+    document.querySelectorAll('.preview-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const url = btn.dataset.url;
+            const size = btn.dataset.size;
+            openImageModal(url, size);
+        });
+    });
+    
+    // Show results section
+    resultsSection.hidden = false;
+    resultsSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Open image preview modal
+function openImageModal(url, size) {
+    modalImage.src = url;
+    modalSize.textContent = `Size: ${size}`;
+    modalDownload.href = url;
+    modalDownload.download = `youtube-thumbnail-${size}.jpg`;
+    imageModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+}
+
+// Close modal
+function closeImageModal() {
+    imageModal.hidden = true;
+    document.body.style.overflow = 'auto';
+}
+
+// Main function
+async function extractThumbnails() {
+    const url = videoUrlInput.value.trim();
+    
+    if (!url) {
+        alert('Please enter a YouTube video URL');
+        videoUrlInput.focus();
+        return;
+    }
+    
+    if (!isValidYouTubeUrl(url)) {
+        alert('Please enter a valid YouTube video URL');
+        videoUrlInput.select();
+        return;
+    }
+    
+    try {
+        setLoading(true);
+        
+        const videoId = extractVideoId(url);
+        console.log('Video ID:', videoId);
+        
+        // Get video info
+        const videoInfo = await getVideoInfo(videoId);
+        
+        // Generate thumbnail URLs
+        const thumbnails = generateThumbnailUrls(videoId);
+        
+        // Display results
+        displayThumbnails(thumbnails, videoInfo);
+        
+        // Track conversion (if you have analytics)
+        console.log('Thumbnails extracted for:', videoId);
+        
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error extracting thumbnails. Please check the URL and try again.');
+    } finally {
+        setLoading(false);
+    }
+}
+
+// Event Listeners
+extractBtn.addEventListener('click', extractThumbnails);
+
+videoUrlInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        extractThumbnails();
+    }
+});
+
+closeModal.addEventListener('click', closeImageModal);
+
+imageModal.addEventListener('click', (e) => {
+    if (e.target === imageModal) {
+        closeImageModal();
+    }
+});
+
+// Close modal with ESC key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !imageModal.hidden) {
+        closeImageModal();
+    }
+});
+
+// SEO: Update page title dynamically based on action
+function updatePageTitle(action = 'Download YouTube Thumbnails') {
+    document.title = `${action} | Y2Mate - Free YouTube Thumbnail Downloader`;
+}
+
+// Example usage for different pages
+// updatePageTitle('How to Download YouTube Thumbnails');
+
+// Initialize
+console.log('Y2Mate Thumbnail Downloader initialized');
+    </script>
+</body>
+</html>
