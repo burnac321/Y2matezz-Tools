@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Y2Mate Tools - Free Online Tools for Content Creators</title>
+    <meta name="description" content="Free online tools for YouTube creators, writers, and content creators. Download thumbnails, edit text, convert videos, compress images and more.">
+    <meta name="keywords" content="YouTube tools, free online tools, thumbnail downloader, text editor, video converter, image compressor, content creator tools">
+    <meta name="author" content="Y2Mate Tools">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://y2matezz.site">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://y2matezz.site">
+    <meta property="og:title" content="Y2Mate Tools - Free Online Tools Collection">
+    <meta property="og:description" content="Collection of free online tools for content creators, writers, and YouTubers.">
+    <meta property="og:image" content="https://y2matezz.site/og-image.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Y2Mate Tools">
+    <meta name="twitter:description" content="Free online tools for content creators">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛠️</text></svg>">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2196F3;
+            --primary-dark: #0b7dda;
+            --secondary: #FF5722;
+            --accent: #4CAF50;
+            --dark: #333;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: var(--dark);
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .logo-text h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text p {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 5rem 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="white" opacity="0.1"/></svg>');
+            background-size: cover;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        #toolSearch {
+            width: 100%;
+            padding: 18px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+
+        #toolSearch:focus {
+            outline: none;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Tools Section */
+        .tools-section {
+            padding: 5rem 0;
+            background: var(--light);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .section-header p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 3rem;
+        }
+
+        /* Tool Card */
+        .tool-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            opacity: 0;
+            animation: fadeIn 0.6s ease forwards;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary);
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .tool-header {
+            padding: 25px;
+            position: relative;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .tool-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .tool-category {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .tool-content {
+            padding: 25px;
+        }
+
+        .tool-content h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .tool-content p {
+            color: var(--gray);
+            margin-bottom: 20px;
+            min-height: 60px;
+        }
+
+        .tool-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .feature-tag {
+            background: var(--light);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: var(--primary);
+        }
+
+        .tool-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .tool-link {
+            padding: 10px 25px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .tool-link:hover {
+            background: var(--primary-dark);
+            transform: translateX(5px);
+        }
+
+        .tool-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        /* Categories Section */
+        .categories-section {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 2rem;
+        }
+
+        .category-card {
+            background: var(--light);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .category-card:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .category-card:hover .category-count {
+            background: white;
+            color: var(--primary);
+        }
+
+        .category-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .category-count {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, var(--secondary) 0%, #ff7043 100%);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Newsletter */
+        .newsletter-section {
+            padding: 4rem 0;
+            background: var(--light);
+            text-align: center;
+        }
+
+        .newsletter-box {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .newsletter-form input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #bbb;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #444;
+            color: #bbb;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: #444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav {
+                display: none;
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+            }
+            
+            .tool-footer {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+
+        /* No Results Message */
+        .no-results {
+            text-align: center;
+            padding: 50px;
+            grid-column: 1 / -1;
+            color: var(--gray);
+        }
+
+        /* Loading Animation */
+        .loader {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">🛠️</div>
+                <div class="logo-text">
+                    <h1>Y2Mate Tools</h1>
+                    <p>Free Online Tools Collection</p>
+                </div>
+            </a>
+            <nav class="nav">
+                <a href="#tools" class="nav-link active">All Tools</a>
+                <a href="#categories" class="nav-link">Categories</a>
+                <a href="#new" class="nav-link">New Tools</a>
+                <a href="#popular" class="nav-link">Popular</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Powerful Tools for Content Creators</h1>
+                <p>Free, easy-to-use online tools for YouTube creators, writers, designers, and content creators. No registration required.</p>
+                <div class="search-container">
+                    <input type="text" id="toolSearch" placeholder="Search for tools (e.g., 'thumbnail', 'editor', 'converter')...">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section class="tools-section" id="tools">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Free Tools Collection</h2>
+                <p>Discover our growing collection of free online tools. Click any tool to start using it immediately.</p>
+            </div>
+            
+            <div class="tools-grid" id="toolsGrid">
+                <!-- Tools will be dynamically loaded here -->
+            </div>
+            
+            <div class="section-header">
+                <p><span id="toolCount">0</span> tools available and counting...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories-section" id="categories">
+        <div class="container">
+            <div class="section-header">
+                <h2>Browse by Category</h2>
+                <p>Find tools organized by their purpose and function</p>
+            </div>
+            <div class="categories-grid" id="categoriesGrid">
+                <!-- Categories will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3 id="totalTools">0</h3>
+                    <p>Free Tools</p>
+                </div>
+                <div class="stat-item">
+                    <h3 id="totalUsers">10K+</h3>
+                    <p>Monthly Users</p>
+                </div>
+                <div class="stat-item">
+                    <h3 id="toolsAdded">0</h3>
+                    <p>This Month</p>
+                </div>
+                <div class="stat-item">
+                    <h3>100%</h3>
+                    <p>Free Forever</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter-section">
+        <div class="container">
+            <div class="newsletter-box">
+                <h2>Stay Updated</h2>
+                <p>Get notified when we add new tools and features to our collection.</p>
+                <form class="newsletter-form" id="newsletterForm">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit" class="tool-link">Subscribe</button>
+                </form>
+                <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">No spam, unsubscribe anytime.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h4>Y2Mate Tools</h4>
+                    <p>Free online tools for content creators, writers, and YouTubers. All tools work directly in your browser.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Popular Tools</h4>
+                    <ul class="footer-links" id="popularTools">
+                        <!-- Popular tools will be loaded here -->
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Categories</h4>
+                    <ul class="footer-links" id="footerCategories">
+                        <!-- Categories will be loaded here -->
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Disclaimer</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="currentYear"></span> y2matezz.site - All rights reserved.</p>
+                <p style="margin-top: 10px; font-size: 0.9rem;">All tools are free to use and work entirely in your browser.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // =============================================
+        // TOOLS DATABASE - ADD NEW TOOLS HERE
+        // =============================================
+        const toolsDatabase = [
+            {
+                id: 1,
+                name: "YouTube Thumbnail Downloader",
+                description: "Download YouTube video thumbnails in HD, SD, HQ, and Max resolution. Fast and free.",
+                category: "YouTube Tools",
+                icon: "🖼️",
+                link: "thumbnaildownloader.html",
+                color: "#FF0000",
+                features: ["HD Quality", "All Sizes", "No Registration", "Fast"],
+                popularity: 95,
+                new: false
+            },
+            {
+                id: 2,
+                name: "Advanced Text Editor",
+                description: "Rich text editor with 100+ fonts, AI assistance, cloud saving, and collaboration features.",
+                category: "Writing Tools",
+                icon: "✍️",
+                link: "texteditor.html",
+                color: "#2196F3",
+                features: ["AI Assistant", "100+ Fonts", "Cloud Save", "Dark Mode"],
+                popularity: 88,
+                new: true
+            },
+            {
+                id: 3,
+                name: "Video Converter",
+                description: "Convert videos between MP4, AVI, MOV, MKV, and other formats. No size limits.",
+                category: "Video Tools",
+                icon: "🎬",
+                link: "#",
+                color: "#9C27B0",
+                features: ["All Formats", "No Limits", "Fast", "HD Quality"],
+                popularity: 82,
+                new: false
+            },
+            {
+                id: 4,
+                name: "Image Compressor",
+                description: "Compress JPG, PNG, GIF, and WebP images without losing quality. Reduce file size by up to 80%.",
+                category: "Image Tools",
+                icon: "📸",
+                link: "#",
+                color: "#4CAF50",
+                features: ["Batch Compress", "Quality Control", "Fast", "All Formats"],
+                popularity: 78,
+                new: true
+            },
+            {
+                id: 5,
+                name: "MP3 Converter",
+                description: "Extract audio from videos and convert to MP3, WAV, AAC, and other audio formats.",
+                category: "Audio Tools",
+                icon: "🎵",
+                link: "#",
+                color: "#FF9800",
+                features: ["High Quality", "Fast", "Batch Convert", "No Watermark"],
+                popularity: 85,
+                new: false
+            },
+            {
+                id: 6,
+                name: "PDF Editor",
+                description: "Edit, merge, split, compress, and convert PDF files online. No software installation needed.",
+                category: "Document Tools",
+                icon: "📄",
+                link: "#",
+                color: "#F44336",
+                features: ["Merge PDF", "Split PDF", "Compress", "Convert"],
+                popularity: 90,
+                new: false
+            },
+            {
+                id: 7,
+                name: "QR Code Generator",
+                description: "Create custom QR codes for URLs, text, WiFi, and contacts. Download in high resolution.",
+                category: "Marketing Tools",
+                icon: "🔲",
+                link: "#",
+                color: "#009688",
+                features: ["Customizable", "High Res", "Vector", "Analytics"],
+                popularity: 75,
+                new: true
+            },
+            {
+                id: 8,
+                name: "Color Picker",
+                description: "Advanced color picker with palette generator, contrast checker, and color blindness simulator.",
+                category: "Design Tools",
+                icon: "🎨",
+                link: "#",
+                color: "#E91E63",
+                features: ["Palette", "Contrast", "Blindness Sim", "Export"],
+                popularity: 70,
+                new: false
+            },
+            {
+                id: 9,
+                name: "Word Counter",
+                description: "Count words, characters, sentences, and paragraphs. Analyze reading time and keyword density.",
+                category: "Writing Tools",
+                icon: "📊",
+                link: "#",
+                color: "#795548",
+                features: ["Real-time", "Detailed", "Export", "Multi-Language"],
+                popularity: 65,
+                new: false
+            },
+            {
+                id: 10,
+                name: "YouTube Tags Generator",
+                description: "Generate SEO-friendly YouTube tags based on your video title and description.",
+                category: "YouTube Tools",
+                icon: "🏷️",
+                link: "#",
+                color: "#3F51B5",
+                features: ["SEO Optimized", "Suggestions", "Export", "Trending"],
+                popularity: 80,
+                new: true
+            },
+            {
+                id: 11,
+                name: "Screen Recorder",
+                description: "Record your screen with audio and webcam. Save as MP4 or GIF. No software download needed.",
+                category: "Video Tools",
+                icon: "🎥",
+                link: "#",
+                color: "#FF5722",
+                features: ["HD Recording", "Webcam", "Audio", "GIF Export"],
+                popularity: 85,
+                new: false
+            },
+            {
+                id: 12,
+                name: "Password Generator",
+                description: "Generate strong, secure passwords with custom length and character types.",
+                category: "Security Tools",
+                icon: "🔐",
+                link: "#",
+                color: "#607D8B",
+                features: ["Secure", "Customizable", "Copy", "Save"],
+                popularity: 72,
+                new: false
+            }
+        ];
+
+        // =============================================
+        // CATEGORIES DATA
+        // =============================================
+        const categories = [
+            { name: "YouTube Tools", icon: "🎬", count: 2 },
+            { name: "Video Tools", icon: "📹", count: 2 },
+            { name: "Image Tools", icon: "🖼️", count: 2 },
+            { name: "Audio Tools", icon: "🎵", count: 1 },
+            { name: "Writing Tools", icon: "✍️", count: 2 },
+            { name: "Document Tools", icon: "📄", count: 1 },
+            { name: "Design Tools", icon: "🎨", count: 2 },
+            { name: "Marketing Tools", icon: "📈", count: 1 },
+            { name: "Security Tools", icon: "🔒", count: 1 }
+        ];
+
+        // =============================================
+        // RANDOMIZATION FUNCTION
+        // =============================================
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // =============================================
+        // TOOLS GRID RENDERER
+        // =============================================
+        function renderToolsGrid(tools = toolsDatabase) {
+            const toolsGrid = document.getElementById('toolsGrid');
+            const toolCount = document.getElementById('toolCount');
+            const totalTools = document.getElementById('totalTools');
+            
+            // Shuffle tools array for random arrangement
+            const shuffledTools = shuffleArray([...tools]);
+            
+            // Clear grid
+            toolsGrid.innerHTML = '';
+            
+            // Update counts
+            toolCount.textContent = tools.length;
+            totalTools.textContent = tools.length;
+            
+            // Render each tool
+            shuffledTools.forEach((tool, index) => {
+                const toolCard = document.createElement('div');
+                toolCard.className = 'tool-card';
+                toolCard.style.animationDelay = `${index * 0.1}s`;
+                
+                // Generate random rotation for icon
+                const randomRotate = Math.random() * 20 - 10;
+                
+                toolCard.innerHTML = `
+                    <div class="tool-header" style="background: linear-gradient(135deg, ${tool.color} 0%, ${tool.color}80 100%);">
+                        <div class="tool-icon" style="transform: rotate(${randomRotate}deg);">${tool.icon}</div>
+                        <h3 style="color: white;">${tool.name}</h3>
+                        <span class="tool-category">${tool.category}</span>
+                        ${tool.new ? '<span style="position: absolute; top: 60px; left: 25px; background: #FF5722; color: white; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem;">NEW</span>' : ''}
+                    </div>
+                    <div class="tool-content">
+                        <p>${tool.description}</p>
+                        <div class="tool-features">
+                            ${tool.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
+                        </div>
+                        <div class="tool-footer">
+                            <a href="${tool.link}" class="tool-link" style="background: ${tool.color};">Use Tool</a>
+                            <div class="tool-stats">
+                                <span><i class="fas fa-fire" style="color: #FF9800;"></i> ${tool.popularity}%</span>
+                                <span><i class="fas fa-clock" style="color: #9E9E9E;"></i> Free</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                toolsGrid.appendChild(toolCard);
+            });
+            
+            // If no tools found
+            if (tools.length === 0) {
+                toolsGrid.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i>
+                        <h3>No tools found</h3>
+                        <p>Try different search terms</p>
+                    </div>
+                `;
+            }
+        }
+
+        // =============================================
+        // CATEGORIES GRID RENDERER
+        // =============================================
+        function renderCategoriesGrid() {
+            const categoriesGrid = document.getElementById('categoriesGrid');
+            const footerCategories = document.getElementById('footerCategories');
+            
+            // Clear grids
+            categoriesGrid.innerHTML = '';
+            footerCategories.innerHTML = '';
+            
+            // Render category cards
+            categories.forEach(category => {
+                // Main grid
+                const categoryCard = document.createElement('div');
+                categoryCard.className = 'category-card';
+                categoryCard.innerHTML = `
+                    <div class="category-icon">${category.icon}</div>
+                    <h3>${category.name}</h3>
+                    <span class="category-count">${category.count} tools</span>
+                `;
+                
+                // Add click event to filter tools by category
+                categoryCard.addEventListener('click', () => {
+                    const filteredTools = toolsDatabase.filter(tool => tool.category === category.name);
+                    renderToolsGrid(filteredTools);
+                    window.scrollTo({ top: document.getElementById('tools').offsetTop - 100, behavior: 'smooth' });
+                });
+                
+                categoriesGrid.appendChild(categoryCard);
+                
+                // Footer list
+                const footerItem = document.createElement('li');
+                footerItem.innerHTML = `<a href="#" data-category="${category.name}">${category.name} (${category.count})</a>`;
+                footerItem.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const filteredTools = toolsDatabase.filter(tool => tool.category === category.name);
+                    renderToolsGrid(filteredTools);
+                    window.scrollTo({ top: document.getElementById('tools').offsetTop - 100, behavior: 'smooth' });
+                });
+                footerCategories.appendChild(footerItem);
+            });
+        }
+
+        // =============================================
+        // POPULAR TOOLS RENDERER (for footer)
+        // =============================================
+        function renderPopularTools() {
+            const popularTools = document.getElementById('popularTools');
+            
+            // Get top 5 popular tools
+            const sortedTools = [...toolsDatabase]
+                .sort((a, b) => b.popularity - a.popularity)
+                .slice(0, 5);
+            
+            sortedTools.forEach(tool => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<a href="${tool.link}">${tool.name}</a>`;
+                popularTools.appendChild(listItem);
+            });
+        }
+
+        // =============================================
+        // SEARCH FUNCTIONALITY
+        // =============================================
+        function setupSearch() {
+            const searchInput = document.getElementById('toolSearch');
+            
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase().trim();
+                
+                if (searchTerm === '') {
+                    renderToolsGrid();
+                    return;
+                }
+                
+                const filteredTools = toolsDatabase.filter(tool => 
+                    tool.name.toLowerCase().includes(searchTerm) ||
+                    tool.description.toLowerCase().includes(searchTerm) ||
+                    tool.category.toLowerCase().includes(searchTerm) ||
+                    tool.features.some(feature => feature.toLowerCase().includes(searchTerm))
+                );
+                
+                renderToolsGrid(filteredTools);
+            });
+        }
+
+        // =============================================
+        // NEWSLETTER FORM
+        // =============================================
+        function setupNewsletter() {
+            const newsletterForm = document.getElementById('newsletterForm');
+            
+            newsletterForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = newsletterForm.querySelector('input').value;
+                
+                // Simple validation
+                if (email && email.includes('@')) {
+                    alert('Thank you for subscribing! You\'ll be notified about new tools.');
+                    newsletterForm.reset();
+                    
+                    // Here you would normally send the email to your server
+                    console.log('New subscriber:', email);
+                }
+            });
+        }
+
+        // =============================================
+        // INITIALIZATION
+        // =============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set current year
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // Initialize tools
+            renderToolsGrid();
+            renderCategoriesGrid();
+            renderPopularTools();
+            setupSearch();
+            setupNewsletter();
+            
+            // Random tools added this month (between 1-5)
+            const toolsAdded = Math.floor(Math.random() * 5) + 1;
+            document.getElementById('toolsAdded').textContent = toolsAdded;
+            
+            // Random monthly users (between 10K-50K)
+            const randomUsers = Math.floor(Math.random() * 40000) + 10000;
+            document.getElementById('totalUsers').textContent = randomUsers.toLocaleString() + '+';
+            
+            // Add animation to cards on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all tool cards
+            document.querySelectorAll('.tool-card').forEach(card => {
+                observer.observe(card);
+            });
+            
+            // Smooth scrolling for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            console.log('Y2Mate Tools Index initialized successfully!');
+            console.log('To add new tools, edit the toolsDatabase array in the JavaScript.');
+        });
+
+        // =============================================
+        // HOW TO ADD NEW TOOLS:
+        // =============================================
+        /*
+        To add a new tool, simply add an object to the toolsDatabase array:
+        
+        {
+            id: 13, // Next number in sequence
+            name: "Tool Name",
+            description: "Tool description here",
+            category: "Category Name", // Must match existing category or add to categories array
+            icon: "🔧", // Emoji or Font Awesome icon
+            link: "toolpage.html", // HTML file name
+            color: "#HEXCOLOR", // Primary color for the tool
+            features: ["Feature 1", "Feature 2", "Feature 3"],
+            popularity: 75, // 0-100 popularity score
+            new: true // Set to true for new badge
+        }
+        
+        If you need a new category, also add it to the categories array:
+        { name: "New Category", icon: "🎯", count: 1 }
+        */
+    </script>
+</body>
+</html>
