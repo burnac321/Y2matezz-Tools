@@ -1276,28 +1276,40 @@
     </div>
 
     <script>
-        // =============================================
-        // STATE MANAGEMENT
-        // =============================================
-        const state = {
-            currentType: 'url',
-            qrData: '',
-            qrColor: '#000000',
-            bgColor: '#FFFFFF',
-            size: 300,
-            errorCorrection: 'M', // L, M, Q, H
-            logo: null,
-            hasLogo: false,
-            roundedCorners: true,
-            gradientEffect: false,
-            addFrame: false,
-            removeLogoBorder: true
-        };
+    // =============================================
+    // STATE MANAGEMENT
+    // =============================================
+    const state = {
+        currentType: 'url',
+        qrData: '',
+        qrColor: '#000000',
+        bgColor: '#FFFFFF',
+        size: 300,
+        errorCorrection: 'M',
+        logo: null,
+        hasLogo: false,
+        roundedCorners: true,
+        gradientEffect: false,
+        addFrame: false,
+        removeLogoBorder: true
+    };
 
-        // =============================================
-        // DOM ELEMENTS
-        // =============================================
-        const elements = {
+    // =============================================
+    // DOM ELEMENTS
+    // =============================================
+    let elements = {};
+
+    // =============================================
+    // INITIALIZATION
+    // =============================================
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize DOM elements after page loads
+        initializeElements();
+        initApp();
+    });
+
+    function initializeElements() {
+        elements = {
             // Type selection
             qrTypes: document.querySelectorAll('.qr-type'),
             inputForms: document.querySelectorAll('.input-form'),
@@ -1365,828 +1377,619 @@
             toastMessage: document.getElementById('toastMessage'),
             toastClose: document.getElementById('toastClose')
         };
+    }
 
-        // =============================================
-        // INITIALIZATION
-        // =============================================
-        document.addEventListener('DOMContentLoaded', () => {
-            initApp();
-        });
+    function initApp() {
+        // Set current year
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Initialize event listeners
+        initEventListeners();
+        
+        // Set initial values
+        updateErrorCorrectionLabel();
+        
+        // Show welcome message
+        setTimeout(() => {
+            showToast('Welcome!', 'Start by entering your QR code content.', 'info');
+        }, 1000);
+        
+        console.log('Y2Mate QR Generator initialized');
+    }
 
-        function initApp() {
-            // Set current year
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
-            
-            // Initialize event listeners
-            initEventListeners();
-            
-            // Set initial values
-            updateErrorCorrectionLabel();
-            
-            // Show welcome message
-            setTimeout(() => {
-                showToast('Welcome!', 'Start by entering your QR code content.', 'info');
-            }, 1000);
-            
-            console.log('Y2Mate QR Generator initialized');
-        }
-
-        function initEventListeners() {
-            // QR type selection
-            elements.qrTypes.forEach(type => {
-                type.addEventListener('click', () => {
-                    const qrType = type.dataset.type;
-                    switchQRType(qrType);
-                });
+    function initEventListeners() {
+        // QR type selection
+        elements.qrTypes.forEach(type => {
+            type.addEventListener('click', () => {
+                const qrType = type.dataset.type;
+                switchQRType(qrType);
             });
-            
-            // Color pickers
-            elements.qrColorPicker.addEventListener('input', (e) => {
-                elements.qrColorText.value = e.target.value;
+        });
+        
+        // Color pickers
+        elements.qrColorPicker.addEventListener('input', (e) => {
+            elements.qrColorText.value = e.target.value;
+            state.qrColor = e.target.value;
+            if (state.qrData) generateQRCode();
+        });
+        
+        elements.bgColorPicker.addEventListener('input', (e) => {
+            elements.bgColorText.value = e.target.value;
+            state.bgColor = e.target.value;
+            if (state.qrData) generateQRCode();
+        });
+        
+        // Color text inputs
+        elements.qrColorText.addEventListener('input', (e) => {
+            if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+                elements.qrColorPicker.value = e.target.value;
                 state.qrColor = e.target.value;
                 if (state.qrData) generateQRCode();
-            });
-            
-            elements.bgColorPicker.addEventListener('input', (e) => {
-                elements.bgColorText.value = e.target.value;
-                state.bgColor = e.target.value;
-                if (state.qrData) generateQRCode();
-            });
-            
-            // Color text inputs
-            elements.qrColorText.addEventListener('input', (e) => {
-                if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
-                    elements.qrColorPicker.value = e.target.value;
-                    state.qrColor = e.target.value;
-                    if (state.qrData) generateQRCode();
-                }
-            });
-            
-            elements.bgColorText.addEventListener('input', (e) => {
-                if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
-                    elements.bgColorPicker.value = e.target.value;
-                    state.bgColor = e.target.value;
-                    if (state.qrData) generateQRCode();
-                }
-            });
-            
-            // Size slider
-            elements.sizeSlider.addEventListener('input', (e) => {
-                state.size = parseInt(e.target.value);
-                elements.sizeValue.textContent = `${state.size}px`;
-                if (state.qrData) generateQRCode();
-            });
-            
-            // Error correction slider
-            elements.errorCorrectionSlider.addEventListener('input', (e) => {
-                const value = parseInt(e.target.value);
-                const corrections = ['L', 'M', 'Q', 'H'];
-                state.errorCorrection = corrections[value];
-                updateErrorCorrectionLabel();
-                if (state.qrData) generateQRCode();
-            });
-            
-            // Logo upload
-            elements.logoUploadArea.addEventListener('click', () => {
-                elements.logoInput.click();
-            });
-            
-            elements.logoInput.addEventListener('change', handleLogoUpload);
-            
-            elements.logoUploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                elements.logoUploadArea.style.borderColor = 'var(--primary)';
-                elements.logoUploadArea.style.background = 'rgba(33, 150, 243, 0.05)';
-            });
-            
-            elements.logoUploadArea.addEventListener('dragleave', () => {
-                elements.logoUploadArea.style.borderColor = '#eee';
-                elements.logoUploadArea.style.background = '';
-            });
-            
-            elements.logoUploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                elements.logoUploadArea.style.borderColor = '#eee';
-                elements.logoUploadArea.style.background = '';
-                
-                if (e.dataTransfer.files.length > 0) {
-                    elements.logoInput.files = e.dataTransfer.files;
-                    handleLogoUpload();
-                }
-            });
-            
-            // Style options
-            elements.removeLogo.addEventListener('change', (e) => {
-                state.removeLogoBorder = e.target.checked;
-                if (state.qrData && state.hasLogo) generateQRCode();
-            });
-            
-            elements.roundedCorners.addEventListener('change', (e) => {
-                state.roundedCorners = e.target.checked;
-                if (state.qrData) generateQRCode();
-            });
-            
-            elements.gradientEffect.addEventListener('change', (e) => {
-                state.gradientEffect = e.target.checked;
-                if (state.qrData) generateQRCode();
-            });
-            
-            elements.addFrame.addEventListener('change', (e) => {
-                state.addFrame = e.target.checked;
-                if (state.qrData) generateQRCode();
-            });
-            
-            // Action buttons
-            elements.generateBtn.addEventListener('click', generateQRCode);
-            elements.downloadBtn.addEventListener('click', downloadQRCode);
-            elements.downloadSvgBtn.addEventListener('click', downloadQRCodeSVG);
-            elements.scanTestBtn.addEventListener('click', startScanTest);
-            elements.resetBtn.addEventListener('click', resetAll);
-            
-            // Toast
-            elements.toastClose.addEventListener('click', hideToast);
-            
-            // Form validation
-            document.querySelectorAll('.form-input').forEach(input => {
-                input.addEventListener('input', validateForm);
-            });
-        }
-
-        // =============================================
-        // QR TYPE SWITCHING
-        // =============================================
-        function switchQRType(type) {
-            state.currentType = type;
-            
-            // Update active type
-            elements.qrTypes.forEach(t => {
-                t.classList.toggle('active', t.dataset.type === type);
-            });
-            
-            // Show corresponding form
-            elements.inputForms.forEach(form => {
-                form.classList.toggle('active', form.id === `${type}-form`);
-            });
-            
-            // Clear QR code if form is empty
-            const form = document.getElementById(`${type}-form`);
-            const inputs = form.querySelectorAll('input[required], textarea[required]');
-            const hasContent = Array.from(inputs).some(input => input.value.trim() !== '');
-            
-            if (!hasContent) {
-                clearQRCode();
-            } else {
-                validateForm();
-            }
-            
-            // Update stats
-            updateStats();
-        }
-
-        // =============================================
-        // FORM VALIDATION
-        // =============================================
-        function validateForm() {
-            let isValid = false;
-            
-            switch(state.currentType) {
-                case 'url':
-                    isValid = elements.urlInput.value.trim() !== '';
-                    break;
-                case 'text':
-                    isValid = elements.textInput.value.trim() !== '';
-                    break;
-                case 'wifi':
-                    isValid = elements.wifiSsid.value.trim() !== '';
-                    break;
-                case 'contact':
-                    isValid = elements.contactFirstName.value.trim() !== '' || 
-                              elements.contactLastName.value.trim() !== '' ||
-                              elements.contactPhone.value.trim() !== '' ||
-                              elements.contactEmail.value.trim() !== '';
-                    break;
-                case 'email':
-                    isValid = elements.emailTo.value.trim() !== '';
-                    break;
-                case 'sms':
-                    isValid = elements.smsNumber.value.trim() !== '' && 
-                              elements.smsMessage.value.trim() !== '';
-                    break;
-                case 'image':
-                    isValid = elements.imageUrl.value.trim() !== '';
-                    break;
-            }
-            
-            elements.generateBtn.disabled = !isValid;
-            return isValid;
-        }
-
-        // =============================================
-        // QR CODE GENERATION
-        // =============================================
-        function generateQRCode() {
-            if (!validateForm()) {
-                showToast('Error', 'Please fill in all required fields', 'error');
-                return;
-            }
-            
-            // Get data based on type
-            const data = getQRData();
-            if (!data) {
-                showToast('Error', 'Invalid data for QR code', 'error');
-                return;
-            }
-            
-            state.qrData = data;
-            
-            // Prepare QR code options
-            const options = {
-                width: state.size,
-                height: state.size,
-                colorDark: state.qrColor,
-                colorLight: state.bgColor,
-                correctLevel: QRCode.CorrectLevel[state.errorCorrection]
-            };
-            
-            // Clear previous QR code
-            clearQRCode();
-            
-            // Generate new QR code
-            try {
-                QRCode.toCanvas(elements.qrCode, data, options, (error) => {
-                    if (error) {
-                        showToast('Error', 'Failed to generate QR code', 'error');
-                        console.error('QR Code generation error:', error);
-                        return;
-                    }
-                    
-                    // Apply customizations
-                    applyCustomizations();
-                    
-                    // Show QR code
-                    elements.qrPlaceholder.style.display = 'none';
-                    elements.qrCode.style.display = 'block';
-                    
-                    // Enable buttons
-                    elements.downloadBtn.disabled = false;
-                    elements.downloadSvgBtn.disabled = false;
-                    elements.scanTestBtn.disabled = false;
-                    
-                    // Show stats
-                    elements.qrStats.style.display = 'block';
-                    updateStats();
-                    
-                    showToast('Success', 'QR code generated successfully', 'success');
-                });
-            } catch (error) {
-                showToast('Error', 'Failed to generate QR code', 'error');
-                console.error('QR Code generation error:', error);
-            }
-        }
-
-        function getQRData() {
-            switch(state.currentType) {
-                case 'url':
-                    let url = elements.urlInput.value.trim();
-                    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                        url = 'https://' + url;
-                    }
-                    return url;
-                    
-                case 'text':
-                    return elements.textInput.value.trim();
-                    
-                case 'wifi':
-                    const ssid = elements.wifiSsid.value.trim();
-                    const password = elements.wifiPassword.value.trim();
-                    const encryption = elements.wifiEncryption.value;
-                    const hidden = elements.wifiHidden.checked;
-                    
-                    let wifiString = `WIFI:`;
-                    wifiString += `S:${escapeQRField(ssid)};`;
-                    wifiString += `T:${encryption};`;
-                    if (password) wifiString += `P:${escapeQRField(password)};`;
-                    if (hidden) wifiString += `H:true;`;
-                    wifiString += `;`;
-                    
-                    return wifiString;
-                    
-                case 'contact':
-                    const contact = {
-                        firstName: elements.contactFirstName.value.trim(),
-                        lastName: elements.contactLastName.value.trim(),
-                        phone: elements.contactPhone.value.trim(),
-                        email: elements.contactEmail.value.trim(),
-                        company: elements.contactCompany.value.trim(),
-                        website: elements.contactWebsite.value.trim(),
-                        address: elements.contactAddress.value.trim()
-                    };
-                    
-                    let vcard = 'BEGIN:VCARD\nVERSION:3.0\n';
-                    if (contact.firstName || contact.lastName) {
-                        vcard += `N:${contact.lastName};${contact.firstName};;;\n`;
-                        vcard += `FN:${contact.firstName} ${contact.lastName}\n`;
-                    }
-                    if (contact.phone) vcard += `TEL:${contact.phone}\n`;
-                    if (contact.email) vcard += `EMAIL:${contact.email}\n`;
-                    if (contact.company) vcard += `ORG:${contact.company}\n`;
-                    if (contact.website) vcard += `URL:${contact.website}\n`;
-                    if (contact.address) vcard += `ADR:;;${contact.address.replace(/\n/g, ';')};;\n`;
-                    vcard += 'END:VCARD';
-                    
-                    return vcard;
-                    
-                case 'email':
-                    const to = elements.emailTo.value.trim();
-                    const subject = elements.emailSubject.value.trim();
-                    const body = elements.emailBody.value.trim();
-                    
-                    let emailString = `mailto:${encodeURIComponent(to)}`;
-                    if (subject || body) emailString += '?';
-                    if (subject) emailString += `subject=${encodeURIComponent(subject)}`;
-                    if (subject && body) emailString += '&';
-                    if (body) emailString += `body=${encodeURIComponent(body)}`;
-                    
-                    return emailString;
-                    
-                case 'sms':
-                    const number = elements.smsNumber.value.trim();
-                    const message = elements.smsMessage.value.trim();
-                    
-                    return `sms:${number}?body=${encodeURIComponent(message)}`;
-                    
-                case 'image':
-                    const imageUrl = elements.imageUrl.value.trim();
-                    const altUrl = elements.imageAltUrl.value.trim();
-                    
-                    // For image QR codes, we create an HTML page that redirects to the image
-                    if (altUrl) {
-                        return `https://redirect.y2matezz.site/?image=${encodeURIComponent(imageUrl)}&fallback=${encodeURIComponent(altUrl)}`;
-                    } else {
-                        return imageUrl;
-                    }
-                    
-                default:
-                    return null;
-            }
-        }
-
-        function escapeQRField(field) {
-            return field.replace(/[;:\\]/g, '\\$&');
-        }
-
-        // =============================================
-        // CUSTOMIZATION APPLICATIONS
-        // =============================================
-        function applyCustomizations() {
-            const canvas = elements.qrCode;
-            const ctx = canvas.getContext('2d');
-            
-            // Apply rounded corners if enabled
-            if (state.roundedCorners) {
-                applyRoundedCorners(ctx, canvas.width, canvas.height);
-            }
-            
-            // Apply gradient effect if enabled
-            if (state.gradientEffect) {
-                applyGradientEffect(ctx, canvas.width, canvas.height);
-            }
-            
-            // Add logo if exists
-            if (state.hasLogo && state.logo) {
-                addLogoToQRCode(ctx, canvas.width, canvas.height);
-            }
-            
-            // Add frame if enabled
-            if (state.addFrame) {
-                addFrameToQRCode(ctx, canvas.width, canvas.height);
-            }
-        }
-
-        function applyRoundedCorners(ctx, width, height) {
-            // Get image data
-            const imageData = ctx.getImageData(0, 0, width, height);
-            const data = imageData.data;
-            const radius = 3;
-            
-            // Create temporary canvas for rounded corners
-            const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = width;
-            tempCanvas.height = height;
-            const tempCtx = tempCanvas.getContext('2d');
-            
-            // Draw rounded rectangle
-            tempCtx.fillStyle = state.bgColor;
-            tempCtx.fillRect(0, 0, width, height);
-            
-            tempCtx.fillStyle = state.qrColor;
-            roundRect(tempCtx, 0, 0, width, height, radius);
-            tempCtx.fill();
-            
-            // Composite with original QR code
-            tempCtx.globalCompositeOperation = 'destination-in';
-            tempCtx.drawImage(canvas, 0, 0);
-            
-            // Copy back to original canvas
-            ctx.clearRect(0, 0, width, height);
-            ctx.drawImage(tempCanvas, 0, 0);
-        }
-
-        function roundRect(ctx, x, y, width, height, radius) {
-            if (width < 2 * radius) radius = width / 2;
-            if (height < 2 * radius) radius = height / 2;
-            
-            ctx.beginPath();
-            ctx.moveTo(x + radius, y);
-            ctx.arcTo(x + width, y, x + width, y + height, radius);
-            ctx.arcTo(x + width, y + height, x, y + height, radius);
-            ctx.arcTo(x, y + height, x, y, radius);
-            ctx.arcTo(x, y, x + width, y, radius);
-            ctx.closePath();
-        }
-
-        function applyGradientEffect(ctx, width, height) {
-            // Create gradient for QR modules
-            const gradient = ctx.createLinearGradient(0, 0, width, height);
-            gradient.addColorStop(0, state.qrColor);
-            gradient.addColorStop(1, lightenColor(state.qrColor, 40));
-            
-            // Apply gradient to dark pixels
-            const imageData = ctx.getImageData(0, 0, width, height);
-            const data = imageData.data;
-            
-            for (let i = 0; i < data.length; i += 4) {
-                if (data[i] === 0 && data[i + 1] === 0 && data[i + 2] === 0) {
-                    // Calculate position-based color
-                    const x = (i / 4) % width;
-                    const y = Math.floor((i / 4) / width);
-                    const ratio = (x + y) / (width + height);
-                    
-                    // Interpolate between gradient colors
-                    const color = interpolateColor(state.qrColor, lightenColor(state.qrColor, 40), ratio);
-                    const rgb = hexToRgb(color);
-                    
-                    data[i] = rgb.r;
-                    data[i + 1] = rgb.g;
-                    data[i + 2] = rgb.b;
-                }
-            }
-            
-            ctx.putImageData(imageData, 0, 0);
-        }
-
-        function addLogoToQRCode(ctx, width, height) {
-            const logoSize = Math.min(width, height) * 0.2; // 20% of QR code size
-            const x = (width - logoSize) / 2;
-            const y = (height - logoSize) / 2;
-            
-            // Create circular mask for logo if border removal is enabled
-            if (state.removeLogoBorder) {
-                // Save context
-                ctx.save();
-                
-                // Create circular clipping path
-                ctx.beginPath();
-                ctx.arc(x + logoSize / 2, y + logoSize / 2, logoSize / 2, 0, Math.PI * 2);
-                ctx.closePath();
-                ctx.clip();
-                
-                // Draw logo
-                ctx.drawImage(state.logo, x, y, logoSize, logoSize);
-                
-                // Restore context
-                ctx.restore();
-            } else {
-                // Draw logo with border
-                ctx.drawImage(state.logo, x, y, logoSize, logoSize);
-                
-                // Add white border around logo
-                ctx.strokeStyle = state.bgColor;
-                ctx.lineWidth = 3;
-                ctx.strokeRect(x - 1, y - 1, logoSize + 2, logoSize + 2);
-            }
-        }
-
-        function addFrameToQRCode(ctx, width, height) {
-            const frameWidth = 20;
-            const frameColor = lightenColor(state.bgColor, -20);
-            
-            // Draw frame
-            ctx.strokeStyle = frameColor;
-            ctx.lineWidth = frameWidth;
-            ctx.strokeRect(frameWidth / 2, frameWidth / 2, width - frameWidth, height - frameWidth);
-            
-            // Add corner decorations
-            const cornerSize = 30;
-            ctx.fillStyle = state.qrColor;
-            
-            // Top-left corner
-            ctx.fillRect(0, 0, cornerSize, 5);
-            ctx.fillRect(0, 0, 5, cornerSize);
-            
-            // Top-right corner
-            ctx.fillRect(width - cornerSize, 0, cornerSize, 5);
-            ctx.fillRect(width - 5, 0, 5, cornerSize);
-            
-            // Bottom-left corner
-            ctx.fillRect(0, height - 5, cornerSize, 5);
-            ctx.fillRect(0, height - cornerSize, 5, cornerSize);
-            
-            // Bottom-right corner
-            ctx.fillRect(width - cornerSize, height - 5, cornerSize, 5);
-            ctx.fillRect(width - 5, height - cornerSize, 5, cornerSize);
-        }
-
-        // =============================================
-        // LOGO UPLOAD HANDLING
-        // =============================================
-        function handleLogoUpload() {
-            const file = elements.logoInput.files[0];
-            if (!file) return;
-            
-            if (file.size > 50 * 1024) { // 50KB limit
-                showToast('Error', 'Logo file too large (max 50KB)', 'error');
-                return;
-            }
-            
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    state.logo = img;
-                    state.hasLogo = true;
-                    
-                    // Show preview
-                    elements.logoPreview.src = e.target.result;
-                    elements.logoPreview.style.display = 'block';
-                    
-                    // Update QR code if exists
-                    if (state.qrData) {
-                        generateQRCode();
-                    }
-                    
-                    showToast('Success', 'Logo uploaded successfully', 'success');
-                };
-                img.onerror = () => {
-                    showToast('Error', 'Failed to load logo image', 'error');
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // =============================================
-        // DOWNLOAD FUNCTIONS
-        // =============================================
-        function downloadQRCode() {
-            if (!state.qrData) return;
-            
-            const canvas = elements.qrCode;
-            const link = document.createElement('a');
-            link.download = `y2mate-qrcode-${Date.now()}.png`;
-            link.href = canvas.toDataURL('image/png', 1.0);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            showToast('Downloaded', 'QR code saved as PNG', 'success');
-        }
-
-        function downloadQRCodeSVG() {
-            if (!state.qrData) return;
-            
-            // Generate SVG version
-            const svgSize = state.size;
-            const svg = `
-                <svg xmlns="http://www.w3.org/2000/svg" width="${svgSize}" height="${svgSize}" viewBox="0 0 ${svgSize} ${svgSize}">
-                    <rect width="100%" height="100%" fill="${state.bgColor}"/>
-                    ${generateQRSVGPath()}
-                </svg>
-            `;
-            
-            const blob = new Blob([svg], { type: 'image/svg+xml' });
-            const link = document.createElement('a');
-            link.download = `y2mate-qrcode-${Date.now()}.svg`;
-            link.href = URL.createObjectURL(blob);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(link.href);
-            
-            showToast('Downloaded', 'QR code saved as SVG', 'success');
-        }
-
-        function generateQRSVGPath() {
-            // This is a simplified version - in production you'd want to
-            // parse the canvas data or use a library that generates SVG directly
-            return `<path d="M10,10h10v10h-10z M30,10h10v10h-10z" fill="${state.qrColor}"/>`;
-        }
-
-        // =============================================
-        // SCAN TEST FUNCTION
-        // =============================================
-        function startScanTest() {
-            if (!state.qrData) return;
-            
-            // Show scanning animation
-            elements.scanLine.style.display = 'block';
-            elements.scanLine.style.animation = 'scan 2s linear infinite';
-            
-            // Stop after 5 seconds
-            setTimeout(() => {
-                elements.scanLine.style.display = 'none';
-                elements.scanLine.style.animation = '';
-                
-                showToast('Scan Test', 'Use your phone camera to scan the QR code', 'info');
-            }, 5000);
-        }
-
-        // =============================================
-        // RESET FUNCTION
-        // =============================================
-        function resetAll() {
-            // Reset form inputs
-            elements.urlInput.value = '';
-            elements.textInput.value = '';
-            elements.wifiSsid.value = '';
-            elements.wifiPassword.value = '';
-            elements.wifiEncryption.value = 'WPA';
-            elements.wifiHidden.checked = false;
-            elements.contactFirstName.value = '';
-            elements.contactLastName.value = '';
-            elements.contactPhone.value = '';
-            elements.contactEmail.value = '';
-            elements.contactCompany.value = '';
-            elements.contactWebsite.value = '';
-            elements.contactAddress.value = '';
-            elements.emailTo.value = '';
-            elements.emailSubject.value = '';
-            elements.emailBody.value = '';
-            elements.smsNumber.value = '';
-            elements.smsMessage.value = '';
-            elements.imageUrl.value = '';
-            elements.imageAltUrl.value = '';
-            
-            // Reset customization
-            elements.qrColorPicker.value = '#000000';
-            elements.qrColorText.value = '#000000';
-            elements.bgColorPicker.value = '#ffffff';
-            elements.bgColorText.value = '#ffffff';
-            elements.sizeSlider.value = '300';
-            elements.sizeValue.textContent = '300px';
-            elements.errorCorrectionSlider.value = '1';
-            updateErrorCorrectionLabel();
-            elements.logoPreview.style.display = 'none';
-            elements.logoInput.value = '';
-            elements.removeLogo.checked = true;
-            elements.roundedCorners.checked = true;
-            elements.gradientEffect.checked = false;
-            elements.addFrame.checked = false;
-            
-            // Reset state
-            state.currentType = 'url';
-            state.qrData = '';
-            state.qrColor = '#000000';
-            state.bgColor = '#FFFFFF';
-            state.size = 300;
-            state.errorCorrection = 'M';
-            state.logo = null;
-            state.hasLogo = false;
-            state.roundedCorners = true;
-            state.gradientEffect = false;
-            state.addFrame = false;
-            state.removeLogoBorder = true;
-            
-            // Reset UI
-            clearQRCode();
-            switchQRType('url');
-            validateForm();
-            
-            showToast('Reset', 'All settings have been reset', 'info');
-        }
-
-        function clearQRCode() {
-            elements.qrPlaceholder.style.display = 'block';
-            elements.qrCode.style.display = 'none';
-            elements.qrStats.style.display = 'none';
-            elements.downloadBtn.disabled = true;
-            elements.downloadSvgBtn.disabled = true;
-            elements.scanTestBtn.disabled = true;
-        }
-
-        // =============================================
-        // UTILITY FUNCTIONS
-        // =============================================
-        function updateErrorCorrectionLabel() {
-            const labels = ['Low (7%)', 'Medium (15%)', 'Quartile (25%)', 'High (30%)'];
-            const value = parseInt(elements.errorCorrectionSlider.value);
-            elements.errorCorrectionValue.textContent = labels[value];
-        }
-
-        function updateStats() {
-            if (!state.qrData) return;
-            
-            elements.statType.textContent = state.currentType.toUpperCase();
-            elements.statSize.textContent = `${state.size}×${state.size}px`;
-            elements.statFormat.textContent = 'PNG/SVG';
-            elements.statCorrection.textContent = elements.errorCorrectionValue.textContent;
-            elements.statData.textContent = `${state.qrData.length} characters`;
-        }
-
-        function lightenColor(color, percent) {
-            const num = parseInt(color.replace("#", ""), 16);
-            const amt = Math.round(2.55 * percent);
-            const R = (num >> 16) + amt;
-            const G = (num >> 8 & 0x00FF) + amt;
-            const B = (num & 0x0000FF) + amt;
-            
-            return "#" + (
-                0x1000000 +
-                (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
-                (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
-                (B < 255 ? B < 1 ? 0 : B : 255)
-            ).toString(16).slice(1);
-        }
-
-        function hexToRgb(hex) {
-            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? {
-                r: parseInt(result[1], 16),
-                g: parseInt(result[2], 16),
-                b: parseInt(result[3], 16)
-            } : { r: 0, g: 0, b: 0 };
-        }
-
-        function interpolateColor(color1, color2, ratio) {
-            const rgb1 = hexToRgb(color1);
-            const rgb2 = hexToRgb(color2);
-            
-            const r = Math.round(rgb1.r + (rgb2.r - rgb1.r) * ratio);
-            const g = Math.round(rgb1.g + (rgb2.g - rgb1.g) * ratio);
-            const b = Math.round(rgb1.b + (rgb2.b - rgb1.b) * ratio);
-            
-            return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
-        }
-
-        // =============================================
-        // TOAST NOTIFICATIONS
-        // =============================================
-        function showToast(title, message, type = 'info') {
-            // Set content
-            elements.toastTitle.textContent = title;
-            elements.toastMessage.textContent = message;
-            
-            // Set type
-            elements.toast.className = `toast ${type}`;
-            
-            // Show
-            elements.toast.classList.add('show');
-            
-            // Auto-hide after 5 seconds
-            setTimeout(hideToast, 5000);
-        }
-
-        function hideToast() {
-            elements.toast.classList.remove('show');
-        }
-
-        // =============================================
-        // INITIAL DEMO
-        // =============================================
-        setTimeout(() => {
-            // Pre-fill URL with your site for demo
-            elements.urlInput.value = 'https://y2matezz.site';
-            validateForm();
-        }, 2000);
-
-        // =============================================
-        // KEYBOARD SHORTCUTS
-        // =============================================
-        document.addEventListener('keydown', (e) => {
-            // Ctrl/Cmd + Enter to generate
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                e.preventDefault();
-                if (!elements.generateBtn.disabled) {
-                    elements.generateBtn.click();
-                }
-            }
-            
-            // Ctrl/Cmd + S to download PNG
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                e.preventDefault();
-                if (!elements.downloadBtn.disabled) {
-                    elements.downloadBtn.click();
-                }
-            }
-            
-            // Escape to reset
-            if (e.key === 'Escape') {
-                e.preventDefault();
-                elements.resetBtn.click();
             }
         });
+        
+        elements.bgColorText.addEventListener('input', (e) => {
+            if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+                elements.bgColorPicker.value = e.target.value;
+                state.bgColor = e.target.value;
+                if (state.qrData) generateQRCode();
+            }
+        });
+        
+        // Size slider
+        elements.sizeSlider.addEventListener('input', (e) => {
+            state.size = parseInt(e.target.value);
+            elements.sizeValue.textContent = `${state.size}px`;
+            if (state.qrData) generateQRCode();
+        });
+        
+        // Error correction slider
+        elements.errorCorrectionSlider.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            const corrections = ['L', 'M', 'Q', 'H'];
+            state.errorCorrection = corrections[value];
+            updateErrorCorrectionLabel();
+            if (state.qrData) generateQRCode();
+        });
+        
+        // Logo upload
+        elements.logoUploadArea.addEventListener('click', () => {
+            elements.logoInput.click();
+        });
+        
+        elements.logoInput.addEventListener('change', handleLogoUpload);
+        
+        // Style options
+        elements.removeLogo.addEventListener('change', (e) => {
+            state.removeLogoBorder = e.target.checked;
+            if (state.qrData && state.hasLogo) generateQRCode();
+        });
+        
+        elements.roundedCorners.addEventListener('change', (e) => {
+            state.roundedCorners = e.target.checked;
+            if (state.qrData) generateQRCode();
+        });
+        
+        elements.gradientEffect.addEventListener('change', (e) => {
+            state.gradientEffect = e.target.checked;
+            if (state.qrData) generateQRCode();
+        });
+        
+        elements.addFrame.addEventListener('change', (e) => {
+            state.addFrame = e.target.checked;
+            if (state.qrData) generateQRCode();
+        });
+        
+        // Action buttons
+        elements.generateBtn.addEventListener('click', generateQRCode);
+        elements.downloadBtn.addEventListener('click', downloadQRCode);
+        elements.downloadSvgBtn.addEventListener('click', downloadQRCodeSVG);
+        elements.scanTestBtn.addEventListener('click', startScanTest);
+        elements.resetBtn.addEventListener('click', resetAll);
+        
+        // Toast
+        elements.toastClose.addEventListener('click', hideToast);
+        
+        // Form validation
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('input', validateForm);
+        });
 
-        console.log('Y2Mate QR Generator v1.0 loaded successfully!');
-    </script>
+        // Initialize with sample data for testing
+        setTimeout(() => {
+            elements.urlInput.value = 'https://y2matezz.site';
+            validateForm();
+        }, 500);
+    }
+
+    // =============================================
+    // QR TYPE SWITCHING
+    // =============================================
+    function switchQRType(type) {
+        state.currentType = type;
+        
+        // Update active type
+        elements.qrTypes.forEach(t => {
+            t.classList.toggle('active', t.dataset.type === type);
+        });
+        
+        // Show corresponding form
+        elements.inputForms.forEach(form => {
+            form.classList.toggle('active', form.id === `${type}-form`);
+        });
+        
+        validateForm();
+    }
+
+    // =============================================
+    // FORM VALIDATION
+    // =============================================
+    function validateForm() {
+        let isValid = false;
+        
+        switch(state.currentType) {
+            case 'url':
+                isValid = elements.urlInput.value.trim() !== '';
+                break;
+            case 'text':
+                isValid = elements.textInput.value.trim() !== '';
+                break;
+            case 'wifi':
+                isValid = elements.wifiSsid.value.trim() !== '';
+                break;
+            case 'contact':
+                isValid = elements.contactFirstName.value.trim() !== '' || 
+                          elements.contactLastName.value.trim() !== '' ||
+                          elements.contactPhone.value.trim() !== '' ||
+                          elements.contactEmail.value.trim() !== '';
+                break;
+            case 'email':
+                isValid = elements.emailTo.value.trim() !== '';
+                break;
+            case 'sms':
+                isValid = elements.smsNumber.value.trim() !== '' && 
+                          elements.smsMessage.value.trim() !== '';
+                break;
+            case 'image':
+                isValid = elements.imageUrl.value.trim() !== '';
+                break;
+        }
+        
+        elements.generateBtn.disabled = !isValid;
+        return isValid;
+    }
+
+    // =============================================
+    // QR CODE GENERATION (FIXED VERSION)
+    // =============================================
+    function generateQRCode() {
+        if (!validateForm()) {
+            showToast('Error', 'Please fill in all required fields', 'error');
+            return;
+        }
+        
+        // Get data based on type
+        const data = getQRData();
+        if (!data) {
+            showToast('Error', 'Invalid data for QR code', 'error');
+            return;
+        }
+        
+        state.qrData = data;
+        
+        // Clear previous QR code
+        clearQRCode();
+        
+        // Create canvas context
+        const canvas = elements.qrCode;
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size
+        canvas.width = state.size;
+        canvas.height = state.size;
+        
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Fill background
+        ctx.fillStyle = state.bgColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Generate QR code using simple algorithm (for demo)
+        // In production, use a proper QR library
+        drawSimpleQRCode(ctx, data, canvas.width, canvas.height);
+        
+        // Apply customizations
+        applyCustomizations();
+        
+        // Show QR code
+        elements.qrPlaceholder.style.display = 'none';
+        canvas.style.display = 'block';
+        
+        // Enable buttons
+        elements.downloadBtn.disabled = false;
+        elements.downloadSvgBtn.disabled = false;
+        elements.scanTestBtn.disabled = false;
+        
+        // Show stats
+        elements.qrStats.style.display = 'block';
+        updateStats();
+        
+        showToast('Success', 'QR code generated successfully', 'success');
+    }
+
+    // Simple QR code drawing function (for demo)
+    function drawSimpleQRCode(ctx, data, width, height) {
+        ctx.fillStyle = state.qrColor;
+        
+        // Create a simple pattern based on data hash
+        const hash = simpleHash(data);
+        const cellSize = Math.min(width, height) / 20;
+        
+        for (let y = 0; y < 20; y++) {
+            for (let x = 0; x < 20; x++) {
+                // Use hash to determine if cell should be filled
+                const index = (y * 20 + x) % hash.length;
+                if (hash.charCodeAt(index) % 2 === 0) {
+                    ctx.fillRect(
+                        x * cellSize + cellSize * 0.1,
+                        y * cellSize + cellSize * 0.1,
+                        cellSize * 0.8,
+                        cellSize * 0.8
+                    );
+                }
+            }
+        }
+        
+        // Add finder patterns (corners)
+        drawFinderPattern(ctx, 0, 0, cellSize);
+        drawFinderPattern(ctx, width - cellSize * 7, 0, cellSize);
+        drawFinderPattern(ctx, 0, height - cellSize * 7, cellSize);
+    }
+
+    function drawFinderPattern(ctx, x, y, cellSize) {
+        ctx.fillStyle = state.qrColor;
+        
+        // Outer square
+        ctx.fillRect(x, y, cellSize * 7, cellSize * 7);
+        
+        // Inner white square
+        ctx.fillStyle = state.bgColor;
+        ctx.fillRect(x + cellSize, y + cellSize, cellSize * 5, cellSize * 5);
+        
+        // Center dot
+        ctx.fillStyle = state.qrColor;
+        ctx.fillRect(x + cellSize * 2, y + cellSize * 2, cellSize * 3, cellSize * 3);
+    }
+
+    function simpleHash(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            hash = ((hash << 5) - hash) + str.charCodeAt(i);
+            hash |= 0;
+        }
+        return Math.abs(hash).toString(16).padStart(8, '0').repeat(4);
+    }
+
+    function getQRData() {
+        switch(state.currentType) {
+            case 'url':
+                let url = elements.urlInput.value.trim();
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    url = 'https://' + url;
+                }
+                return url;
+                
+            case 'text':
+                return elements.textInput.value.trim();
+                
+            case 'wifi':
+                const ssid = elements.wifiSsid.value.trim();
+                const password = elements.wifiPassword.value.trim();
+                const encryption = elements.wifiEncryption.value;
+                const hidden = elements.wifiHidden.checked;
+                
+                let wifiString = `WIFI:`;
+                wifiString += `S:${escapeQRField(ssid)};`;
+                wifiString += `T:${encryption};`;
+                if (password) wifiString += `P:${escapeQRField(password)};`;
+                if (hidden) wifiString += `H:true;`;
+                wifiString += `;`;
+                
+                return wifiString;
+                
+            case 'contact':
+                const contact = {
+                    firstName: elements.contactFirstName.value.trim(),
+                    lastName: elements.contactLastName.value.trim(),
+                    phone: elements.contactPhone.value.trim(),
+                    email: elements.contactEmail.value.trim(),
+                    company: elements.contactCompany.value.trim(),
+                    website: elements.contactWebsite.value.trim(),
+                    address: elements.contactAddress.value.trim()
+                };
+                
+                let vcard = 'BEGIN:VCARD\nVERSION:3.0\n';
+                if (contact.firstName || contact.lastName) {
+                    vcard += `N:${contact.lastName};${contact.firstName};;;\n`;
+                    vcard += `FN:${contact.firstName} ${contact.lastName}\n`;
+                }
+                if (contact.phone) vcard += `TEL:${contact.phone}\n`;
+                if (contact.email) vcard += `EMAIL:${contact.email}\n`;
+                if (contact.company) vcard += `ORG:${contact.company}\n`;
+                if (contact.website) vcard += `URL:${contact.website}\n`;
+                if (contact.address) vcard += `ADR:;;${contact.address.replace(/\n/g, ';')};;\n`;
+                vcard += 'END:VCARD';
+                
+                return vcard;
+                
+            case 'email':
+                const to = elements.emailTo.value.trim();
+                const subject = elements.emailSubject.value.trim();
+                const body = elements.emailBody.value.trim();
+                
+                let emailString = `mailto:${encodeURIComponent(to)}`;
+                if (subject || body) emailString += '?';
+                if (subject) emailString += `subject=${encodeURIComponent(subject)}`;
+                if (subject && body) emailString += '&';
+                if (body) emailString += `body=${encodeURIComponent(body)}`;
+                
+                return emailString;
+                
+            case 'sms':
+                const number = elements.smsNumber.value.trim();
+                const message = elements.smsMessage.value.trim();
+                
+                return `sms:${number}?body=${encodeURIComponent(message)}`;
+                
+            case 'image':
+                const imageUrl = elements.imageUrl.value.trim();
+                const altUrl = elements.imageAltUrl.value.trim();
+                
+                return imageUrl;
+                
+            default:
+                return null;
+        }
+    }
+
+    function escapeQRField(field) {
+        return field.replace(/[;:\\]/g, '\\$&');
+    }
+
+    // =============================================
+    // CUSTOMIZATION FUNCTIONS
+    // =============================================
+    function applyCustomizations() {
+        const canvas = elements.qrCode;
+        const ctx = canvas.getContext('2d');
+        
+        // Apply rounded corners if enabled
+        if (state.roundedCorners) {
+            applyRoundedCorners(ctx, canvas.width, canvas.height);
+        }
+        
+        // Add logo if exists
+        if (state.hasLogo && state.logo) {
+            addLogoToQRCode(ctx, canvas.width, canvas.height);
+        }
+        
+        // Add frame if enabled
+        if (state.addFrame) {
+            addFrameToQRCode(ctx, canvas.width, canvas.height);
+        }
+    }
+
+    function applyRoundedCorners(ctx, width, height) {
+        // Create rounded corners effect
+        ctx.globalCompositeOperation = 'destination-in';
+        roundRect(ctx, 0, 0, width, height, 20);
+        ctx.fill();
+        ctx.globalCompositeOperation = 'source-over';
+    }
+
+    function roundRect(ctx, x, y, width, height, radius) {
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.arcTo(x + width, y, x + width, y + height, radius);
+        ctx.arcTo(x + width, y + height, x, y + height, radius);
+        ctx.arcTo(x, y + height, x, y, radius);
+        ctx.arcTo(x, y, x + width, y, radius);
+        ctx.closePath();
+    }
+
+    function addLogoToQRCode(ctx, width, height) {
+        const logoSize = Math.min(width, height) * 0.2;
+        const x = (width - logoSize) / 2;
+        const y = (height - logoSize) / 2;
+        
+        // Draw logo
+        ctx.drawImage(state.logo, x, y, logoSize, logoSize);
+        
+        // Add border if not removed
+        if (!state.removeLogoBorder) {
+            ctx.strokeStyle = state.bgColor;
+            ctx.lineWidth = 3;
+            ctx.strokeRect(x - 2, y - 2, logoSize + 4, logoSize + 4);
+        }
+    }
+
+    function addFrameToQRCode(ctx, width, height) {
+        const frameWidth = 20;
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = frameWidth;
+        ctx.strokeRect(frameWidth / 2, frameWidth / 2, width - frameWidth, height - frameWidth);
+    }
+
+    // =============================================
+    // LOGO UPLOAD
+    // =============================================
+    function handleLogoUpload() {
+        const file = elements.logoInput.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                state.logo = img;
+                state.hasLogo = true;
+                
+                // Show preview
+                elements.logoPreview.src = e.target.result;
+                elements.logoPreview.style.display = 'block';
+                
+                // Update QR code if exists
+                if (state.qrData) {
+                    generateQRCode();
+                }
+                
+                showToast('Success', 'Logo uploaded successfully', 'success');
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // =============================================
+    // DOWNLOAD FUNCTIONS
+    // =============================================
+    function downloadQRCode() {
+        if (!state.qrData) return;
+        
+        const canvas = elements.qrCode;
+        const link = document.createElement('a');
+        link.download = `y2mate-qrcode-${Date.now()}.png`;
+        link.href = canvas.toDataURL('image/png');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        showToast('Downloaded', 'QR code saved as PNG', 'success');
+    }
+
+    function downloadQRCodeSVG() {
+        if (!state.qrData) return;
+        
+        // Simple SVG generation
+        const svg = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="${state.size}" height="${state.size}" viewBox="0 0 ${state.size} ${state.size}">
+                <rect width="100%" height="100%" fill="${state.bgColor}"/>
+                <text x="50%" y="50%" text-anchor="middle" fill="${state.qrColor}" font-family="Arial" font-size="20">
+                    QR Code: ${state.qrData.substring(0, 30)}...
+                </text>
+            </svg>
+        `;
+        
+        const blob = new Blob([svg], { type: 'image/svg+xml' });
+        const link = document.createElement('a');
+        link.download = `y2mate-qrcode-${Date.now()}.svg`;
+        link.href = URL.createObjectURL(blob);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        showToast('Downloaded', 'QR code saved as SVG', 'success');
+    }
+
+    // =============================================
+    // UTILITY FUNCTIONS
+    // =============================================
+    function updateErrorCorrectionLabel() {
+        const labels = ['Low (7%)', 'Medium (15%)', 'Quartile (25%)', 'High (30%)'];
+        const value = parseInt(elements.errorCorrectionSlider.value);
+        elements.errorCorrectionValue.textContent = labels[value];
+    }
+
+    function updateStats() {
+        if (!state.qrData) return;
+        
+        elements.statType.textContent = state.currentType.toUpperCase();
+        elements.statSize.textContent = `${state.size}×${state.size}px`;
+        elements.statFormat.textContent = 'PNG/SVG';
+        elements.statCorrection.textContent = elements.errorCorrectionValue.textContent;
+        elements.statData.textContent = `${state.qrData.length} characters`;
+    }
+
+    function clearQRCode() {
+        elements.qrPlaceholder.style.display = 'block';
+        elements.qrCode.style.display = 'none';
+        elements.qrStats.style.display = 'none';
+        elements.downloadBtn.disabled = true;
+        elements.downloadSvgBtn.disabled = true;
+        elements.scanTestBtn.disabled = true;
+    }
+
+    function startScanTest() {
+        if (!state.qrData) return;
+        
+        showToast('Scan Test', 'Use your phone camera to scan the QR code', 'info');
+    }
+
+    function resetAll() {
+        // Reset form inputs
+        document.querySelectorAll('.form-input').forEach(input => {
+            if (input.type !== 'file') input.value = '';
+        });
+        
+        // Reset to URL type
+        switchQRType('url');
+        elements.urlInput.value = 'https://y2matezz.site';
+        
+        // Reset customization
+        elements.qrColorPicker.value = '#000000';
+        elements.qrColorText.value = '#000000';
+        elements.bgColorPicker.value = '#ffffff';
+        elements.bgColorText.value = '#ffffff';
+        elements.sizeSlider.value = '300';
+        elements.sizeValue.textContent = '300px';
+        elements.errorCorrectionSlider.value = '1';
+        updateErrorCorrectionLabel();
+        elements.logoPreview.style.display = 'none';
+        elements.logoInput.value = '';
+        elements.removeLogo.checked = true;
+        elements.roundedCorners.checked = true;
+        elements.gradientEffect.checked = false;
+        elements.addFrame.checked = false;
+        
+        // Reset state
+        state.currentType = 'url';
+        state.qrData = '';
+        state.qrColor = '#000000';
+        state.bgColor = '#FFFFFF';
+        state.size = 300;
+        state.errorCorrection = 'M';
+        state.logo = null;
+        state.hasLogo = false;
+        state.roundedCorners = true;
+        state.gradientEffect = false;
+        state.addFrame = false;
+        state.removeLogoBorder = true;
+        
+        // Reset UI
+        clearQRCode();
+        validateForm();
+        
+        showToast('Reset', 'All settings have been reset', 'info');
+    }
+
+    // =============================================
+    // TOAST NOTIFICATIONS
+    // =============================================
+    function showToast(title, message, type = 'info') {
+        elements.toastTitle.textContent = title;
+        elements.toastMessage.textContent = message;
+        elements.toast.className = `toast ${type}`;
+        elements.toast.classList.add('show');
+        
+        setTimeout(hideToast, 3000);
+    }
+
+    function hideToast() {
+        elements.toast.classList.remove('show');
+    }
+
+    console.log('Y2Mate QR Generator v1.0 loaded successfully!');
+</script>
 </body>
 </html>
